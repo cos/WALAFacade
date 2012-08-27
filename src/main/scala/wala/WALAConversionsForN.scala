@@ -4,6 +4,8 @@ import com.ibm.wala.ssa.IR
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import com.ibm.wala.ipa.callgraph.ContextKey
+import wala.WALAConversions
+import wala.S
 
 trait WALAConversionsForN { self: WALAConversions =>
 

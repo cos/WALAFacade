@@ -1,5 +1,5 @@
 <classpath>
-  <classpathentry output="target/scala-2.9.2/classes" path="src" kind="src"></classpathentry>
+  <classpathentry output="target/scala-2.9.2/classes" path="src/main/scala" kind="src"></classpathentry>
   <classpathentry output="target/scala-2.9.2/classes" path="src/main/java" kind="src"></classpathentry>
   <classpathentry output="target/scala-2.9.2/test-classes" path="src/test/scala" kind="src"></classpathentry>
   <classpathentry output="target/scala-2.9.2/test-classes" path="src/test/java" kind="src"></classpathentry>

@@ -4,7 +4,10 @@ import WALAConversions._
 import util.debug
 
 object O {
-  def unapply(o: O): Option[(N, I)] = {
+
+  import wala.WALAConversions
+  
+def unapply(o: O): Option[(N, I)] = {
     o match {
       case o: AllocationSiteInNode => Some(o.getNode(), o.getNode().getIR().getNew(o.getSite()))
       case _ => None

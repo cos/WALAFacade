@@ -12,6 +12,10 @@ import com.ibm.wala.types.TypeReference
 import com.ibm.wala.types.ClassLoaderReference
 import com.ibm.wala.ipa.callgraph.ContextKey
 import com.ibm.wala.ipa.callgraph.DelegatingContext
+import wala.TypeAliases
+import wala.WALAConversionsForP
+import wala.O
+import wala.WALAConversionsForN
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {

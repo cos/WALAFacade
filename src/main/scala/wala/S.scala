@@ -6,7 +6,8 @@ import com.ibm.wala.classLoader.ShrikeBTMethod
 import util.debug
 
 object S {
-  def unapply(b: BasicBlockInContext[IExplodedBasicBlock]): Option[(N, I)] = {
+  import wala.WALAConversions
+def unapply(b: BasicBlockInContext[IExplodedBasicBlock]): Option[(N, I)] = {
     Some(b.getNode(), b.getDelegate().getInstruction())
   }
   def apply(n: N, i: I) = new S(n, i)
