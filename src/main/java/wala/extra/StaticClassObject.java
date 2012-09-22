@@ -1,4 +1,4 @@
-package wala;
+package wala.extra;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;

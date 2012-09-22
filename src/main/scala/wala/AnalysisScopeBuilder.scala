@@ -16,7 +16,7 @@ object AnalysisScopeBuilder {
   def apply(exclussionsFile: String) = new AnalysisScopeBuilder(if (System.getProperty("os.name").contains("Linux"))
     "/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/rt.jar"
   else
-    "/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar", exclussionsFile)
+    "/Library/Java/JavaVirtualMachines/1.6.0_31-b04-413.jdk/Contents/Classes/classes.jar", exclussionsFile)
 }
 
 class AnalysisScopeBuilder(jreLibPath: String, exclusionsFile: String) {
