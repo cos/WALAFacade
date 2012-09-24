@@ -1,9 +1,11 @@
 package wala
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
-import WALAConversions._
 import util.debug
 
 object O {
+  import wala.WALAConversions._
+  import wala.extra.StaticClassObject
+
   def unapply(o: O): Option[(N, I)] = {
     o match {
       case o: AllocationSiteInNode => Some(o.getNode(), o.getNode().getIR().getNew(o.getSite()))

@@ -1,6 +1,7 @@
 package wala
 import com.ibm.wala.ssa.SSAPutInstruction
 import scala.collection.JavaConversions._
+import wala.WALAConversions
 
 // "Pointer Local" - equivalent of LocalPointerKey
 trait WALAConversionsForP { self: WALAConversions =>

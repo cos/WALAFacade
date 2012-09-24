@@ -1,4 +1,5 @@
 package wala
+
 import java.io.File
 import java.util.jar.JarFile
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule
@@ -6,10 +7,10 @@ import com.ibm.wala.classLoader.JarFileModule
 import com.ibm.wala.ipa.callgraph.AnalysisScope
 import com.ibm.wala.util.config.FileOfClasses
 import com.ibm.wala.util.io.FileProvider
-import util.debug
 import scala.collection._
 import scala.collection.JavaConverters._
 import com.ibm.wala.util.strings.Atom
+import util.debug
 
 object AnalysisScopeBuilder {
   def apply(exclussionsFile: String) = new AnalysisScopeBuilder(if (System.getProperty("os.name").contains("Linux"))
