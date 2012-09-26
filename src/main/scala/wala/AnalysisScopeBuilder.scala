@@ -13,17 +13,14 @@ import com.ibm.wala.util.strings.Atom
 import util.debug
 
 object AnalysisScopeBuilder {
-  def apply(exclussionsFile: String) = new AnalysisScopeBuilder(if (System.getProperty("os.name").contains("Linux"))
-    "/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/rt.jar"
-  else
-    "/Library/Java/JavaVirtualMachines/1.6.0_31-b04-413.jdk/Contents/Classes/classes.jar", exclussionsFile)
+  def apply(jreLibPath: String, exclusionsFile: String) = new AnalysisScopeBuilder(jreLibPath, exclusionsFile)
 }
 
 class AnalysisScopeBuilder(jreLibPath: String, exclusionsFile: String) {
-  val UNDER_ECLIPSE = true;
+  val UNDER_ECLIPSE = false;
   val scope = AnalysisScope.createJavaAnalysisScope()
   scope.addToScope(scope.getLoader(AnalysisScope.PRIMORDIAL), new JarFile(jreLibPath));
-  
+
   scope.setExclusions(FileOfClasses.createFileOfClasses(new File(exclusionsFile)));
 
   private def getFile(path: String) =
