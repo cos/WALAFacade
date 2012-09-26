@@ -2,3 +2,4 @@ bin/
 .cache
 .DS_Store
 target/
+/.classpath
