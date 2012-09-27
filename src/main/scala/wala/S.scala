@@ -3,7 +3,7 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext
 import WALAConversions._
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock
 import com.ibm.wala.classLoader.ShrikeBTMethod
-import util.debug
+import sppa.util.debug
 
 object S {
   import wala.WALAConversions

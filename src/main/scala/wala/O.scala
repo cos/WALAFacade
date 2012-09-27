@@ -1,6 +1,6 @@
 package wala
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
-import util.debug
+import sppa.util.debug
 
 object O {
   import wala.WALAConversions._

@@ -10,7 +10,7 @@ import com.ibm.wala.util.io.FileProvider
 import scala.collection._
 import scala.collection.JavaConverters._
 import com.ibm.wala.util.strings.Atom
-import util.debug
+import sppa.util.debug
 
 object AnalysisScopeBuilder {
   def apply(jreLibPath: String, exclusionsFile: String) = new AnalysisScopeBuilder(jreLibPath, exclusionsFile)
