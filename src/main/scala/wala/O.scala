@@ -17,7 +17,7 @@ object O {
       (o.getConcreteType().prettyPrint + ": " + codeLocation(o.getNode(), o.getSite().getProgramCounter())) +
         (if (debug.detailContexts) " --- " + o.getNode() else "")
 
-    case o: StaticClassObject => "Static: " + o.getKlass().prettyPrint()
+    case o: StaticClassObject => "Static: " + o.klass.prettyPrint()
     case _ => o.toString
   }
 }

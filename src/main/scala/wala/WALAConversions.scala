@@ -12,10 +12,6 @@ import com.ibm.wala.types.TypeReference
 import com.ibm.wala.types.ClassLoaderReference
 import com.ibm.wala.ipa.callgraph.ContextKey
 import com.ibm.wala.ipa.callgraph.DelegatingContext
-import wala.TypeAliases
-import wala.WALAConversionsForP
-import wala.O
-import wala.WALAConversionsForN
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -163,6 +159,8 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     def +(addedC:Context):Context = new DelegatingContext(c, addedC)
   }
 
+  val mainMethod = "main([Ljava/lang/String;)V";
 }
 
 object WALAConversions extends WALAConversions
+object WC extends WALAConversions

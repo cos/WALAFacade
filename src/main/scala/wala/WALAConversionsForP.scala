@@ -1,7 +1,6 @@
 package wala
 import com.ibm.wala.ssa.SSAPutInstruction
 import scala.collection.JavaConversions._
-import wala.WALAConversions
 
 // "Pointer Local" - equivalent of LocalPointerKey
 trait WALAConversionsForP { self: WALAConversions =>
@@ -14,7 +13,7 @@ trait WALAConversionsForP { self: WALAConversions =>
     }
   }
 
-  implicit def enhanceP(p: P) = new {
+  class EnhancedP(p: P) {
     def n = p.getNode()
     def v = p.getValueNumber()
     def getDef() = n.getDU().getDef(v)
@@ -33,4 +32,6 @@ trait WALAConversionsForP { self: WALAConversions =>
     def prettyPrint(): String =
       n.prettyPrint + " v" + v + "(" + (if (!variableNames().isEmpty) variableNames.reduce(_ + "," + _) else "") + ")"
   }
+
+  implicit def enhanceP(p: P): EnhancedP = new EnhancedP(p)
 }

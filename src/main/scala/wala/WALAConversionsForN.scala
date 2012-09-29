@@ -4,8 +4,7 @@ import com.ibm.wala.ssa.IR
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import com.ibm.wala.ipa.callgraph.ContextKey
-import wala.WALAConversions
-import wala.S
+import com.ibm.wala.ipa.callgraph.CGNode
 
 trait WALAConversionsForN { self: WALAConversions =>
 
@@ -14,8 +13,8 @@ trait WALAConversionsForN { self: WALAConversions =>
       Some(n.getContext(), n.getMethod())
     }
   }
-
-  implicit def enhanceN(n: N) = new {
+  
+  class EnhancedN(n: CGNode) {
     def prettyPrint: String = 
       n.getMethod().prettyPrint
       
@@ -43,4 +42,6 @@ trait WALAConversionsForN { self: WALAConversions =>
     def c(k: ContextKey) = 
       n.getContext().get(k)
   }
+
+  implicit def enhanceN(n: N) = new EnhancedN(n)
 }
