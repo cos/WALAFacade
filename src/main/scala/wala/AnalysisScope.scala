@@ -31,9 +31,10 @@ object AnalysisScope {
 
 class AnalysisScope(jreLibPath: String, exclusionsFile: String) extends com.ibm.wala.ipa.callgraph.AnalysisScope(Collections.singleton(Language.JAVA)) {
   val UNDER_ECLIPSE = false;
-
   import AnalysisScope._
-
+  
+  initForJava()
+  
   addToScope(getLoader(Primordial), new JarFile(jreLibPath))
 
   setExclusions(FileOfClasses.createFileOfClasses(new File(exclusionsFile)))

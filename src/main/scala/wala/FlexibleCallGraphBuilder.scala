@@ -46,14 +46,16 @@ class FlexibleCallGraphBuilder(cha: ClassHierarchy, val _options: AnalysisOption
   protected def contextInterpreter = new DelegatingSSAContextInterpreter(defaultInterpreter, reflectionInterpreter)
   protected def instanceKeys = new ZeroXInstanceKeys(options, cha, theContextInterpreter, policy)
 
+  // the rest...
   val theContextInterpreter = contextInterpreter
 
-  makeCallGraph(options)
   final lazy val heap = getPointerAnalysis().getHeapGraph()
 
   setContextSelector(cs)
   setContextInterpreter(theContextInterpreter)
-  setInstanceKeys(instanceKeyFactory)
+  setInstanceKeys(instanceKeys)
+  
+  makeCallGraph(options)
 }
 
 

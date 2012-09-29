@@ -32,14 +32,12 @@ object AnalysisOptions {
     entrypoints: Iterable[(String, String)],
     dependencies: Iterable[Dependency]): AnalysisOptions = {
 
-    val jreLibPath: String = config.getString("wala.jre-lib-path")
-    val exclusionsFile: String = config.getString("wala.exclussions-file")
-
-    val scope = new AnalysisScope(jreLibPath, exclusionsFile)
+    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"))
     for (d <- dependencies) d match {
       case Dependency(file, DependencyNature.BinaryDirectory) => scope.addBinaryDependency(file)
     }
-
+    println(scope)
+    
     apply(entrypoints, scope)
   }
 
