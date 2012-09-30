@@ -12,10 +12,15 @@ import com.ibm.wala.types.TypeReference
 import com.ibm.wala.types.ClassLoaderReference
 import com.ibm.wala.ipa.callgraph.ContextKey
 import com.ibm.wala.ipa.callgraph.DelegatingContext
+import com.ibm.wala.util.Predicate
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
     def name(): String
+  }
+
+  implicit def makePredicateFromFunction[T](f: Function1[T, Boolean]) = new Predicate[T] {
+    def test(t: T) = f(t)
   }
 
   implicit def m2named(m: M): Named = new Named {
@@ -150,13 +155,13 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
   //      }
   //    }
   //  }
-  
+
   implicit def contextWithIs(c: Context) = new {
-    def is(k:ContextKey) = c.get(k) != null
+    def is(k: ContextKey) = c.get(k) != null
   }
-  
+
   implicit def contextWithAdd(c: Context) = new {
-    def +(addedC:Context):Context = new DelegatingContext(c, addedC)
+    def +(addedC: Context): Context = new DelegatingContext(c, addedC)
   }
 
   val mainMethod = "main([Ljava/lang/String;)V";
