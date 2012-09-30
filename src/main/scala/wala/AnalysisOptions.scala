@@ -36,7 +36,6 @@ object AnalysisOptions {
     for (d <- dependencies) d match {
       case Dependency(file, DependencyNature.BinaryDirectory) => scope.addBinaryDependency(file)
     }
-    println(scope)
     
     apply(entrypoints, scope)
   }
