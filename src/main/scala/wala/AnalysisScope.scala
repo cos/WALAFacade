@@ -14,14 +14,7 @@ import java.util.Collections
 import com.ibm.wala.classLoader.Language
 
 object AnalysisScope {
-  object DependencyNature extends Enumeration {
-    type DependencyNature = Value
-    val Binary, BinaryDirectory, Jar, JarDirectory = Value
-  }
-  import DependencyNature._
-
-  case class Dependency(file: String, nature: DependencyNature = BinaryDirectory)
-
+  type Scope = Atom
   val Primordial = com.ibm.wala.ipa.callgraph.AnalysisScope.PRIMORDIAL
   val Extension = com.ibm.wala.ipa.callgraph.AnalysisScope.EXTENSION
   val Application = com.ibm.wala.ipa.callgraph.AnalysisScope.APPLICATION
@@ -29,15 +22,43 @@ object AnalysisScope {
   def apply(jreLibPath: String, exclusionsFile: String) = new AnalysisScope(jreLibPath, exclusionsFile)
 }
 
-class AnalysisScope(jreLibPath: String, exclusionsFile: String) extends com.ibm.wala.ipa.callgraph.AnalysisScope(Collections.singleton(Language.JAVA)) {
+object DependencyNature extends Enumeration {
+  type DependencyNature = Value
+  val Binary, BinaryDirectory, Jar, JarDirectory = Value
+}
+
+import DependencyNature._
+import AnalysisScope._
+
+object Dependency {
+  def apply(file: String): Dependency = apply(file, BinaryDirectory, Application)
+  def apply(file: String, nature: DependencyNature): Dependency = apply(file, nature, Application)
+}
+
+case class Dependency(file: String, nature: DependencyNature, scope: Scope)
+
+class AnalysisScope(jreLibPath: String, exclusionsFile: String, dependencies: Iterable[Dependency]) extends com.ibm.wala.ipa.callgraph.AnalysisScope(Collections.singleton(Language.JAVA)) {
   val UNDER_ECLIPSE = false;
   import AnalysisScope._
-  
+
+  def this(jreLibPath: String, exclusionsFile: String) = this(jreLibPath, exclusionsFile, Seq())
+
   initForJava()
-  
+
   addToScope(getLoader(Primordial), new JarFile(jreLibPath))
 
   setExclusions(FileOfClasses.createFileOfClasses(new File(exclusionsFile)))
+
+  addDependencies(dependencies)
+
+  def addDependencies(dependencies: Iterable[Dependency]) {
+    for (d <- dependencies) d match {
+      case Dependency(file, BinaryDirectory, scope: Scope) => addBinaryDependency(file, scope)
+      case Dependency(file, JarDirectory, scope: Scope) => addJarDirectoryDependency(file, scope)
+      case Dependency(file, Jar, scope: Scope) => addJarDependency(file, scope)
+      case Dependency(file, Binary, scope: Scope) => throw new Exception("Unimplemented yet")
+    }
+  }
 
   def getFile(path: String) =
     if (UNDER_ECLIPSE)
@@ -54,44 +75,33 @@ class AnalysisScope(jreLibPath: String, exclusionsFile: String) extends com.ibm.
 
   def getLoader() = AnalysisScope.this.getClass().getClassLoader();
 
-  def addExtensionBinaryDependency(directory: String) {
-    debug("Binary extension: " + directory)
-    val sd = getFile(directory)
-    assert(sd.isDirectory())
-    addToScope(getLoader(Extension), new BinaryDirectoryTreeModule(sd))
-  }
-
-  def addJarFolderDependency(path: String) {
+  def addJarDirectoryDependency(path: String, scope: Scope = Application) {
     debug("Jar folder: " + path);
     val dir = getFile(path);
-
     val delim = if (path.endsWith("/")) "" else "/"
-
-    if (!dir.isDirectory())
-      return ;
 
     val files = dir.list();
     if (files == null) return
 
-    for (fileName <- files) {
+    for (fileName <- files) yield {
       if (fileName.endsWith(".jar"))
-        addJarDependency(path + delim + fileName);
+        addJarDependency(path + delim + fileName, scope)
       else {
         val file = new File(fileName)
         if (file.isDirectory())
-          addJarFolderDependency(file.getAbsolutePath());
+          addJarDirectoryDependency(file.getAbsolutePath(), scope)
       }
     }
   }
 
-  def addJarDependency(file: String) {
+  def addJarDependency(file: String, scope: Scope) {
     debug("Jar: " + file);
     val M = if (UNDER_ECLIPSE)
       new FileProvider().getJarFileModule(file, getLoader());
     else
       new JarFileModule(new JarFile(file, true));
 
-    addToScope(getLoader(Application), M);
+    addToScope(getLoader(scope), M);
   }
 
 }

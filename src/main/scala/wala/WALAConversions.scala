@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.DelegatingContext
 import com.ibm.wala.util.Predicate
 import scala.collection._
 import com.ibm.wala.util.intset.SparseIntSet
+import com.ibm.wala.ipa.slicer.Statement
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -178,7 +179,7 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
   implicit def contextWithAdd(c: Context) = new {
     def +(addedC: Context): Context = new DelegatingContext(c, addedC)
   }
-
+  
   val mainMethod = "main([Ljava/lang/String;)V";
 }
 

@@ -17,7 +17,6 @@ import scala.collection.JavaConverters._
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector
 import com.ibm.wala.util.strings.Atom
 import com.typesafe.config.ConfigFactory
-import wala.AnalysisScope.Dependency
 
 object FlexibleCallGraphBuilder {
   def apply(entrypoint: (String, String), dependencies: Iterable[Dependency]) = new FlexibleCallGraphBuilder(AnalysisOptions(Seq(entrypoint), dependencies))

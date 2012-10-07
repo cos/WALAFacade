@@ -16,9 +16,7 @@ class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entr
 object AnalysisOptions {
   val config = ConfigFactory.load()
 
-  def apply(
-    entrypoints: Iterable[(String, String)],
-    scope: AnalysisScope) = {
+  def apply(entrypoints: Iterable[(String, String)], scope: AnalysisScope) = {
 
     implicit val s = scope
     implicit val cha = ClassHierarchy.make(scope)
@@ -28,18 +26,16 @@ object AnalysisOptions {
     new AnalysisOptions(scope, entrypointsW, cha)
   }
 
-  def apply(
-    entrypoints: Iterable[(String, String)],
-    dependencies: Iterable[Dependency]): AnalysisOptions = {
+  def apply(entrypoints: Iterable[(String, String)], dependencies: Iterable[Dependency]): AnalysisOptions = {
 
-    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"))
-    for (d <- dependencies) d match {
-      case Dependency(file, DependencyNature.BinaryDirectory) => scope.addBinaryDependency(file)
-    }
-    
+    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"), dependencies)
     apply(entrypoints, scope)
   }
 
+  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency]): AnalysisOptions = apply(Seq(entrypoint), dependencies)
+
+  val mainMethod = "main([Ljava/lang/String;)V"
+  
   def makeEntrypoint(entryClass: String, entryMethod: String)(implicit scope: AnalysisScope, cha: ClassHierarchy): Entrypoint = {
     val typeReference: TypeReference = TypeReference.findOrCreate(scope.getLoader(AnalysisScope.Application),
       TypeName.string2TypeName(entryClass))

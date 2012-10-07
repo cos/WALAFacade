@@ -390,7 +390,7 @@ public class DotUtil {
 		try {
 			DotUtil.dotify(m, decorator, dotFile, outputFile,
 					"/usr/local/bin/dot");
-			// PDFViewUtil.launchPDFView(outputFile, "open");
+//			PDFViewUtil.launchPDFView(outputFile, "open");
 		} catch (final WalaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
