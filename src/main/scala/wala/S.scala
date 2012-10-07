@@ -7,8 +7,11 @@ import sppa.util.debug
 
 object S {
   import wala.WALAConversions
-def unapply(b: BasicBlockInContext[IExplodedBasicBlock]): Option[(N, I)] = {
-    Some(b.getNode(), b.getDelegate().getInstruction())
+  def unapply(b: BasicBlockInContext[IExplodedBasicBlock]): Option[(N, I)] = {
+    Some((b.getNode(), b.getDelegate().getInstruction()))
+  }
+  def unapply(s: S[I]): Option[(N, I)] = {
+    Some((s.n, s.i))
   }
   def apply(n: N, i: I) = new S(n, i)
 }
@@ -17,10 +20,10 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
   def prettyPrint(): String =
     printCodeLocation() +
-//      (lockset match {
-//        case Some(lockset) => lockset.map("         "+_.prettyPrint).reduceOption(_+"\n"+_).map("\n"+_).getOrElse("")
-//        case None => ""
-//      }) +
+      //      (lockset match {
+      //        case Some(lockset) => lockset.map("         "+_.prettyPrint).reduceOption(_+"\n"+_).map("\n"+_).getOrElse("")
+      //        case None => ""
+      //      }) +
       (if (debug.detailContexts) " --- " + n else "")
 
   def printCodeLocation(): String = {
@@ -62,7 +65,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
   }
 
   def variableNames(v: Int): Iterable[String] = {
-    if (irNo == -1) return Iterable()
+    if (irNo == -1) return Iterable[String]()
     val names = n.getIR().getLocalNames(irNo, v)
     if (names != null) names.filter(_ != null) else Iterable()
   }

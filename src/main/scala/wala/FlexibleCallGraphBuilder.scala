@@ -24,8 +24,8 @@ object FlexibleCallGraphBuilder {
   def apply(entrypoint: (String, String), dependency: String): FlexibleCallGraphBuilder = apply(entrypoint, Seq(Dependency(dependency)))
 }
 
-class FlexibleCallGraphBuilder(cha: ClassHierarchy, val _options: AnalysisOptions, val cache: AnalysisCache, pointerKeys: PointerKeyFactory)
-  extends SSAPropagationCallGraphBuilder(cha, _options, cache, pointerKeys) with ExtraFeatures {
+class FlexibleCallGraphBuilder(_cha: ClassHierarchy, val _options: AnalysisOptions, val cache: AnalysisCache, pointerKeys: PointerKeyFactory)
+  extends SSAPropagationCallGraphBuilder(_cha, _options, cache, pointerKeys) with ExtraFeatures {
 
   import FlexibleCallGraphBuilder._
 
@@ -54,7 +54,7 @@ class FlexibleCallGraphBuilder(cha: ClassHierarchy, val _options: AnalysisOption
   setContextSelector(cs)
   setContextInterpreter(theContextInterpreter)
   setInstanceKeys(instanceKeys)
-  
+
   makeCallGraph(options)
 }
 

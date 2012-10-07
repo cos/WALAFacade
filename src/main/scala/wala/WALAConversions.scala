@@ -13,6 +13,8 @@ import com.ibm.wala.types.ClassLoaderReference
 import com.ibm.wala.ipa.callgraph.ContextKey
 import com.ibm.wala.ipa.callgraph.DelegatingContext
 import com.ibm.wala.util.Predicate
+import scala.collection._
+import com.ibm.wala.util.intset.SparseIntSet
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -103,13 +105,26 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     def prettyPrint(): String = f.getName().toString()
   }
 
-  implicit def intsetTraversable(s: IntSet) = new Traversable[Int] {
-    def foreach[U](f: Int => U) = {
+  class MyIntSet(s: IntSet) extends immutable.Set[Int] {
+    def contains(key: Int) = s.contains(key)
+    def iterator: Iterator[Int] = {
+      val it = s.intIterator()
+      new Iterator[Int] {
+        def hasNext = it.hasNext()
+        def next = it.next()
+      }
+    }
+    def +(elem:Int) = new MyIntSet(s.union(SparseIntSet.singleton(elem)))
+    def -(elem:Int) = throw new Exception("unsupported, implement this if you need it")
+    
+    override def foreach[U](f: Int => U) = {
       s.foreach(new IntSetAction() {
         override def act(x: Int) = f(x)
       })
     }
   }
+  
+  implicit def intsetSet(s: IntSet) =  new MyIntSet(s)
 
   def inApplicationScope(n: N): Boolean = inApplicationScope(n.m)
   def inApplicationScope(m: M): Boolean = {

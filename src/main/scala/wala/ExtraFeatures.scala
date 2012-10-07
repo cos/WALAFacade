@@ -5,9 +5,9 @@ import wala.WALAConversions._
 
 trait ExtraFeatures { self: FlexibleCallGraphBuilder =>
 
-  /*
-   * And these are helper methods - might be a good ideea to put them in a separate file someday
-   */
+  lazy val allStatements = {
+    callGraph.asScala filter { _.getIR() != null } map { n => n.instructions.map(i => S(n, i)) } flatten
+  }
 
   /**
    * find a call graph node that matches .*pattern.*

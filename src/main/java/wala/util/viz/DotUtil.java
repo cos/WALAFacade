@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package util.wala.viz;
+package wala.util.viz;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -385,8 +385,8 @@ public class DotUtil {
 
 	public static void dotGraph(final Graph<?> m, final String name,
 			final NodeDecorator decorator) {
-		final String dotFile = "debug/" + name + ".dot";
-		final String outputFile = "./debug/" + name + ".pdf";
+		final String dotFile = "target/" + name + ".dot";
+		final String outputFile = "target/" + name + ".pdf";
 		try {
 			DotUtil.dotify(m, decorator, dotFile, outputFile,
 					"/usr/local/bin/dot");

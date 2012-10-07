@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package util.wala.viz;
+package wala.util.viz;
 
 import com.ibm.wala.util.WalaException;
 

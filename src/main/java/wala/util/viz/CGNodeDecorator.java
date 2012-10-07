@@ -1,4 +1,4 @@
-package util.wala.viz;
+package wala.util.viz;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;

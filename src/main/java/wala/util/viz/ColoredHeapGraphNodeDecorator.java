@@ -1,4 +1,4 @@
-package util.wala.viz;
+package wala.util.viz;
 
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.graph.Graph;
