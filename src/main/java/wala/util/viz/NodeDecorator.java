@@ -31,6 +31,10 @@ public interface NodeDecorator {
 		public boolean shouldDisplay(final Object n) {
 			return true;
 		}
+
+		public String getGroup(final Object n) {
+			return "";
+		}
 	};
 
 	/**
@@ -43,4 +47,5 @@ public interface NodeDecorator {
 
 	public boolean shouldDisplay(Object n);
 
+	public String getGroup(Object n);
 }

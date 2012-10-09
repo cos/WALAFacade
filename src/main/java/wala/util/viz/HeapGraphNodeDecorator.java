@@ -66,4 +66,9 @@ public class HeapGraphNodeDecorator implements NodeDecorator {
 	public boolean shouldDisplay(final Object n) {
 		return heapGraph.getSuccNodeCount(n) > 0 || heapGraph.getPredNodeCount(n) > 0;
 	}
+
+	@Override
+	public String getGroup(Object n) {
+		return "";
+	}
 }

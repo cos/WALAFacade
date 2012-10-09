@@ -36,4 +36,9 @@ public class CGNodeDecorator implements NodeDecorator {
 		return true;
 	}
 
+	@Override
+	public String getGroup(Object n) {
+		return "";
+	}
+
 }

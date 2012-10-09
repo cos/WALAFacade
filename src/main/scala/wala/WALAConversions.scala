@@ -115,17 +115,17 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
         def next = it.next()
       }
     }
-    def +(elem:Int) = new MyIntSet(s.union(SparseIntSet.singleton(elem)))
-    def -(elem:Int) = throw new Exception("unsupported, implement this if you need it")
-    
+    def +(elem: Int) = new MyIntSet(s.union(SparseIntSet.singleton(elem)))
+    def -(elem: Int) = throw new Exception("unsupported, implement this if you need it")
+
     override def foreach[U](f: Int => U) = {
       s.foreach(new IntSetAction() {
         override def act(x: Int) = f(x)
       })
     }
   }
-  
-  implicit def intsetSet(s: IntSet) =  new MyIntSet(s)
+
+  implicit def intsetSet(s: IntSet) = new MyIntSet(s)
 
   def inApplicationScope(n: N): Boolean = inApplicationScope(n.m)
   def inApplicationScope(m: M): Boolean = {
@@ -172,6 +172,10 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
   //    }
   //  }
 
+  implicit def statementHasN(s: Statement) = new {
+    def n = s.getNode
+  }
+
   implicit def contextWithIs(c: Context) = new {
     def is(k: ContextKey) = c.get(k) != null
   }
@@ -179,7 +183,7 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
   implicit def contextWithAdd(c: Context) = new {
     def +(addedC: Context): Context = new DelegatingContext(c, addedC)
   }
-  
+
   val mainMethod = "main([Ljava/lang/String;)V";
 }
 

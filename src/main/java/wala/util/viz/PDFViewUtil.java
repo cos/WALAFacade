@@ -40,8 +40,9 @@ public class PDFViewUtil {
 	 * 
 	 * @return a handle to the ghostview process
 	 */
-	public static Process ghostviewIR(final IClassHierarchy cha, final CGNode n, final String pdfFile,
-			final String dotFile, final String dotExe, final String pdfViewExe) throws WalaException {
+	public static Process ghostviewIR(final IClassHierarchy cha,
+			final CGNode n, final String pdfFile, final String dotFile,
+			final String dotExe, final String pdfViewExe) throws WalaException {
 		return ghostviewIR(cha, n, pdfFile, dotFile, dotExe, pdfViewExe, null);
 	}
 
@@ -50,11 +51,12 @@ public class PDFViewUtil {
 	 * 
 	 * @return a handle to the pdf viewer process
 	 * @throws IllegalArgumentException
-	 *           if ir is null
+	 *             if ir is null
 	 */
-	public static Process ghostviewIR(final IClassHierarchy cha, final CGNode n, final String pdfFile,
-			final String dotFile, final String dotExe, final String pdfViewExe, final NodeDecorator annotations)
-			throws WalaException {
+	public static Process ghostviewIR(final IClassHierarchy cha,
+			final CGNode n, final String pdfFile, final String dotFile,
+			final String dotExe, final String pdfViewExe,
+			final NodeDecorator annotations) throws WalaException {
 
 		if (n.getIR() == null) {
 			throw new IllegalArgumentException("ir is null");
@@ -68,7 +70,8 @@ public class PDFViewUtil {
 
 		g = CFGSanitizer.sanitize(n.getIR(), cha);
 
-		DotUtil.dotify(g, labels, n.getIR().getMethod().toString(), dotFile, pdfFile, dotExe);
+		DotUtil.dotify(g, labels, n.getIR().getMethod().toString(), dotFile,
+				pdfFile, dotExe);
 
 		return launchPDFView(pdfFile, pdfViewExe);
 	}
@@ -97,14 +100,21 @@ public class PDFViewUtil {
 			public boolean shouldDisplay(final Object n) {
 				return true;
 			}
+
+			@Override
+			public String getGroup(Object n) {
+				return "";
+			}
 		};
 		return labels;
 	}
 
 	/**
-	 * A node decorator which concatenates the labels from two other node decorators
+	 * A node decorator which concatenates the labels from two other node
+	 * decorators
 	 */
-	private final static class ConcatenatingNodeDecorator implements NodeDecorator {
+	private final static class ConcatenatingNodeDecorator implements
+			NodeDecorator {
 
 		private final NodeDecorator a;
 
@@ -130,6 +140,11 @@ public class PDFViewUtil {
 			return true;
 		}
 
+		@Override
+		public String getGroup(Object n) {
+			return "";
+		}
+
 	}
 
 	private static String getNodeLabel(final CGNode n, final BasicBlock bb) {
@@ -151,22 +166,27 @@ public class PDFViewUtil {
 		for (final Iterator it = bb.iteratePhis(); it.hasNext();) {
 			final SSAPhiInstruction phi = (SSAPhiInstruction) it.next();
 			if (phi != null) {
-				result.append("           " + phi.toString(ir.getSymbolTable())).append("\\l");
+				result.append("           " + phi.toString(ir.getSymbolTable()))
+						.append("\\l");
 			}
 		}
 		if (bb instanceof ExceptionHandlerBasicBlock) {
 			final ExceptionHandlerBasicBlock ebb = (ExceptionHandlerBasicBlock) bb;
-			final SSAGetCaughtExceptionInstruction s = ebb.getCatchInstruction();
+			final SSAGetCaughtExceptionInstruction s = ebb
+					.getCatchInstruction();
 			if (s != null) {
-				result.append("           " + s.toString(ir.getSymbolTable())).append("\\l");
+				result.append("           " + s.toString(ir.getSymbolTable()))
+						.append("\\l");
 			} else {
-				result.append("           " + " No catch instruction. Unreachable?\\l");
+				result.append("           "
+						+ " No catch instruction. Unreachable?\\l");
 			}
 		}
 		final SSAInstruction[] instructions = ir.getInstructions();
 		for (int j = start; j <= end; j++) {
 			if (instructions[j] != null) {
-				final StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(ir.getSymbolTable()));
+				final StringBuffer x = new StringBuffer(j + "   "
+						+ instructions[j].toString(ir.getSymbolTable()));
 				StringStuff.padWithSpaces(x, 35);
 				result.append(x);
 				// result.append(" "+a.locks.get(n, instructions[j]));
@@ -176,7 +196,8 @@ public class PDFViewUtil {
 		for (final Iterator it = bb.iteratePis(); it.hasNext();) {
 			final SSAPiInstruction pi = (SSAPiInstruction) it.next();
 			if (pi != null) {
-				result.append("           " + pi.toString(ir.getSymbolTable())).append("\\l");
+				result.append("           " + pi.toString(ir.getSymbolTable()))
+						.append("\\l");
 			}
 		}
 		return result.toString();
@@ -185,7 +206,8 @@ public class PDFViewUtil {
 	/**
 	 * Launch a process to view a PDF file
 	 */
-	public static Process launchPDFView(final String pdfFile, final String gvExe) throws WalaException {
+	public static Process launchPDFView(final String pdfFile, final String gvExe)
+			throws WalaException {
 		// set up a viewer for the ps file.
 		if (gvExe == null) {
 			throw new IllegalArgumentException("null gvExe");

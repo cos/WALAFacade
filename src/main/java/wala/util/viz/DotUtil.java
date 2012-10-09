@@ -17,7 +17,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import com.ibm.wala.util.WalaException;
@@ -261,6 +265,7 @@ public class DotUtil {
 		result.append("center=true;");
 		result.append(fontsizeStr);
 		result.append(";node [ ");
+		result.append("style = \"rounded\", shape=\"rectangle\", ");
 		result.append(fontsizeStr);
 		result.append(fontcolorStr);
 		result.append(fontnameStr);
@@ -299,7 +304,6 @@ public class DotUtil {
 					result.append(getPort(s, labels));
 					result.append(" \n");
 				}
-
 			}
 		}
 
@@ -310,20 +314,43 @@ public class DotUtil {
 	private static void outputNodes(final NodeDecorator labels,
 			final StringBuffer result, final Collection dotNodes)
 			throws WalaException {
-		for (final Iterator it = dotNodes.iterator(); it.hasNext();) {
-			final Object next = it.next();
-			if (labels == null || labels.shouldDisplay(next))
-				outputNode(labels, result, next);
+
+		Map<String, Set<Object>> groupedNodes = new HashMap<>();
+		Random x = new Random();
+
+		for (Object n : dotNodes) {
+			String group = labels.getGroup(n);
+			if (!groupedNodes.containsKey(group))
+				groupedNodes.put(group, new HashSet<>());
+			groupedNodes.get(group).add(n);
 		}
+		if (groupedNodes.size() == 1)
+			for (Object n : dotNodes)
+				outputNode(labels, result, n);
+		else
+			for (String key : groupedNodes.keySet()) {
+				result.append("subgraph cluster_" + Math.abs(x.nextInt())
+						+ " {\n");
+				result.append("label=\"" + key + "\";\n");
+				result.append("style=filled;\n");
+				result.append("color=lightcyan;\n");
+				for (Object o : groupedNodes.get(key)) {
+					outputNode(labels, result, o);
+				}
+				result.append("}\n");
+			}
 	}
 
 	private static void outputNode(final NodeDecorator labels,
 			final StringBuffer result, final Object n) throws WalaException {
-		result.append("   ");
-		result.append("\"");
-		result.append(getLabel(n, labels));
-		result.append("\"");
-		result.append(decorateNode(n, labels));
+		if (labels == null || labels.shouldDisplay(n)) {
+			result.append("   ");
+			result.append("\"");
+			result.append(getLabel(n, labels));
+			result.append("\"");
+			result.append(" ["
+					+ (labels != null ? labels.getDecoration(n) : "") + " ];\n");
+		}
 	}
 
 	/**
@@ -336,22 +363,6 @@ public class DotUtil {
 
 	private static String getRankDir() throws WalaException {
 		return null;
-	}
-
-	/**
-	 * @param n
-	 *            node to decorate
-	 * @param d
-	 *            decorating master
-	 */
-	private static String decorateNode(final Object n, final NodeDecorator d)
-			throws WalaException {
-		final StringBuffer result = new StringBuffer();
-		if (d != null)
-			result.append(" [" + d.getDecoration(n) + " ]\n");
-		else
-			result.append(" [ ]\n");
-		return result.toString();
 	}
 
 	private static String getLabel(final Object o, final NodeDecorator d)
@@ -390,7 +401,7 @@ public class DotUtil {
 		try {
 			DotUtil.dotify(m, decorator, dotFile, outputFile,
 					"/usr/local/bin/dot");
-//			PDFViewUtil.launchPDFView(outputFile, "open");
+			// PDFViewUtil.launchPDFView(outputFile, "open");
 		} catch (final WalaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
