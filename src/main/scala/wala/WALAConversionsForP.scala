@@ -1,6 +1,7 @@
 package wala
 import com.ibm.wala.ssa.SSAPutInstruction
 import scala.collection.JavaConversions._
+import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldPointerKey
 
 // "Pointer Local" - equivalent of LocalPointerKey
 trait WALAConversionsForP { self: WALAConversions =>
@@ -32,6 +33,10 @@ trait WALAConversionsForP { self: WALAConversions =>
     def prettyPrint(): String =
       n.prettyPrint + " v" + v + "(" + (if (!variableNames().isEmpty) variableNames.reduce(_ + "," + _) else "") + ")"
   }
-
+ 
   implicit def enhanceP(p: P): EnhancedP = new EnhancedP(p)
+  
+  implicit def enhancePK(p: InstanceFieldPointerKey) = new {
+    def prettyPrint(): String = "PT:"+p.getInstanceKey().prettyPrint
+  }
 }
