@@ -332,8 +332,8 @@ public class DotUtil {
 				result.append("subgraph cluster_" + Math.abs(x.nextInt())
 						+ " {\n");
 				result.append("label=\"" + key + "\";\n");
-				result.append("style=filled;\n");
-				result.append("color=lightcyan;\n");
+				result.append("");
+				result.append("color=blue;\n");
 				for (Object o : groupedNodes.get(key)) {
 					outputNode(labels, result, o);
 				}
@@ -395,13 +395,14 @@ public class DotUtil {
 	}
 
 	public static void dotGraph(final Graph<?> m, final String name,
-			final NodeDecorator decorator) {
+			final NodeDecorator decorator, boolean show) {
 		final String dotFile = "target/" + name + ".dot";
 		final String outputFile = "target/" + name + ".pdf";
 		try {
 			DotUtil.dotify(m, decorator, dotFile, outputFile,
 					"/usr/local/bin/dot");
-			// PDFViewUtil.launchPDFView(outputFile, "open");
+			if (show)
+				PDFViewUtil.launchPDFView(outputFile, "open");
 		} catch (final WalaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
