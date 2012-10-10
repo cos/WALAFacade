@@ -90,7 +90,7 @@ public class DotUtil {
 
 	private static DotOutputType outputType = DotOutputType.PDF;
 
-	private static int fontSize = 10;
+	private static int fontSize = 14;
 	private static String fontColor = "black";
 	private static String fontName = "Arial";
 
@@ -243,7 +243,7 @@ public class DotUtil {
 			final NodeDecorator labels, final String title)
 			throws WalaException {
 		final StringBuffer result = new StringBuffer(
-				"digraph \"DirectedGraph\" {\n");
+				"digraph \"DirectedGraph\" {\n xlabel=between; size=\"80.0,36,0\"; ratio=compress;\n"); // rankdir=LR;
 
 		if (title != null) {
 			result.append("graph [label = \"" + title
@@ -264,8 +264,10 @@ public class DotUtil {
 
 		result.append("center=true;");
 		result.append(fontsizeStr);
+//		result.append(";node [ nodesep=0.75, ranksep=0.75 ]");
+//		result.append(";edge [ weight=1.2 ]");
 		result.append(";node [ ");
-		result.append("style = \"rounded\", shape=\"rectangle\", ");
+		result.append("shape=\"rectangle\", ");
 		result.append(fontsizeStr);
 		result.append(fontcolorStr);
 		result.append(fontnameStr);

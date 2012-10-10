@@ -15,6 +15,7 @@ import com.ibm.wala.ssa.SSAArrayStoreInstruction
 import com.ibm.wala.classLoader.IField
 import com.ibm.wala.ssa.SSAInvokeInstruction
 import com.ibm.wala.ssa.SSAMonitorInstruction
+import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey
 
 trait TypeAliases {
   type SS = BasicBlockInContext[IExplodedBasicBlock]
