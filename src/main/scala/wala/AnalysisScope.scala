@@ -94,7 +94,7 @@ class AnalysisScope(jreLibPath: String, exclusionsFile: String, dependencies: It
     }
   }
 
-  def addJarDependency(file: String, scope: Scope) {
+  def addJarDependency(file: String, scope: Scope = Application) {
     debug("Jar: " + file);
     val M = if (UNDER_ECLIPSE)
       new FileProvider().getJarFileModule(file, getLoader());

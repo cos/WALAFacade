@@ -8,56 +8,35 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter
-import com.ibm.wala.ipa.callgraph.impl.Util
-import com.ibm.wala.types.TypeReference
-import com.ibm.wala.types.MethodReference
-import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
-import com.ibm.wala.types.TypeName
 import scala.collection.JavaConverters._
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector
-import com.ibm.wala.util.strings.Atom
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.Config
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.ALLOCATIONS
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.SMUSH_STRINGS
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.SMUSH_THROWABLES
 
 object FlexibleCallGraphBuilder {
-  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency]) = new FlexibleCallGraphBuilder(AnalysisOptions(Seq(entrypoint), dependencies))
-  def apply(entrypoint: (String, String), dependency: String): FlexibleCallGraphBuilder = apply(entrypoint, Seq(Dependency(dependency)))
+  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency])(implicit config: Config) = new FlexibleCallGraphBuilder(AnalysisOptions(Seq(entrypoint), dependencies))
+  def apply(entrypoint: (String, String), dependency: String)(implicit config: Config): FlexibleCallGraphBuilder = apply(entrypoint, Seq(Dependency(dependency)))
+  def apply()(implicit config: Config) = new FlexibleCallGraphBuilder(AnalysisOptions())
 }
 
-class FlexibleCallGraphBuilder(_cha: ClassHierarchy, val _options: AnalysisOptions, val cache: AnalysisCache, pointerKeys: PointerKeyFactory)
-  extends SSAPropagationCallGraphBuilder(_cha, _options, cache, pointerKeys) with ExtraFeatures {
-
-  import FlexibleCallGraphBuilder._
+class FlexibleCallGraphBuilder(
+  val _cha: ClassHierarchy,
+  val _options: AnalysisOptions,
+  val _cache: AnalysisCache, pointerKeys: PointerKeyFactory)
+  extends SSAPropagationCallGraphBuilder(_cha, _options, _cache, pointerKeys)
+  with AbstractCallGraphBuilder with ExtraFeatures {
 
   // Constructors
   def this(cha: ClassHierarchy, options: AnalysisOptions) = this(cha, options, new AnalysisCache, new DefaultPointerKeyFactory())
   def this(options: AnalysisOptions) = this(options.cha, options)
 
-  // just helpers
-  lazy val defaultInterpreter = new DefaultSSAInterpreter(options, cache)
-  lazy val reflectionInterpreter = new DelegatingSSAContextInterpreter(
-    ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, cache), defaultInterpreter)
-  Util.addDefaultSelectors(options, cha)
-  Util.addDefaultBypassLogic(options, options.getAnalysisScope(), classOf[Util].getClassLoader(), cha)
-
-  // Hooks
-  protected def cs: ContextSelector = new DefaultContextSelector(options, cha)
-  def policy = { import ZeroXInstanceKeys._; SMUSH_STRINGS | ALLOCATIONS | SMUSH_THROWABLES }
-  protected def contextInterpreter = new DelegatingSSAContextInterpreter(defaultInterpreter, reflectionInterpreter)
-  protected def instanceKeys = new ZeroXInstanceKeys(options, cha, theContextInterpreter, policy)
-
-  // the rest...
-  val theContextInterpreter = contextInterpreter
-
   final lazy val heap = getPointerAnalysis().getHeapGraph()
 
-  setContextSelector(cs)
   setContextInterpreter(theContextInterpreter)
+  setContextSelector(cs)
   setInstanceKeys(instanceKeys)
 
-  makeCallGraph(options)
+  val cg = makeCallGraph(options)
 }
-
-
-
-
-
