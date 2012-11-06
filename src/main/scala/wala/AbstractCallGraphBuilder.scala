@@ -11,6 +11,7 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys
 import com.ibm.wala.analysis.pointers.HeapGraph
 import com.ibm.wala.ipa.callgraph.CallGraph
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector
 
 trait AbstractCallGraphBuilder {
   def _options: AnalysisOptions
@@ -24,15 +25,15 @@ trait AbstractCallGraphBuilder {
   
   // just helpers
   lazy val defaultInterpreter = new DefaultSSAInterpreter(_options, _cache)
-  lazy val reflectionInterpreter = new DelegatingSSAContextInterpreter(
-    ReflectionContextInterpreter.createReflectionContextInterpreter(_cha, _options, _cache), defaultInterpreter)
+//  lazy val reflectionInterpreter = new DelegatingSSAContextInterpreter(
+//    ReflectionContextInterpreter.createReflectionContextInterpreter(_cha, _options, _cache), defaultInterpreter)
   Util.addDefaultSelectors(_options, _cha)
   Util.addDefaultBypassLogic(_options, _options.getAnalysisScope(), classOf[Util].getClassLoader(), _cha)
 
   // Hooks
-  def policy = { import ZeroXInstanceKeys._; SMUSH_STRINGS | ALLOCATIONS | SMUSH_THROWABLES }
-  protected def cs: ContextSelector = new DefaultContextSelector(_options, _cha)
-  protected def contextInterpreter = new DelegatingSSAContextInterpreter(defaultInterpreter, reflectionInterpreter)
+  def policy = { import ZeroXInstanceKeys._;  ALLOCATIONS | SMUSH_THROWABLES }
+  protected def cs: ContextSelector = new ContextInsensitiveSelector() // new DefaultContextSelector(_options, _cha)
+  protected def contextInterpreter = defaultInterpreter // new DelegatingSSAContextInterpreter(defaultInterpreter, reflectionInterpreter)
   protected def instanceKeys = new ZeroXInstanceKeys(_options, _cha, theContextInterpreter, policy)
 
   // the rest...
