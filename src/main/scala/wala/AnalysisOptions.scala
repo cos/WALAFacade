@@ -25,7 +25,7 @@ object AnalysisOptions {
     new AnalysisOptions(scope, entrypointsW, cha)
   }
 
-  def apply()(implicit config: Config): AnalysisOptions = {
+  def apply()(implicit config: Config = ConfigFactory.load): AnalysisOptions = {
     val binDep = config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
     val jarDep = config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
 
@@ -41,7 +41,8 @@ object AnalysisOptions {
     apply(entrypoints, scope)
   }
 
-  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency])(implicit config: Config = ConfigFactory.load): AnalysisOptions = apply(Seq(entrypoint), dependencies)
+  def apply(entrypoint: (String, String),
+    dependencies: Iterable[Dependency])(implicit config: Config): AnalysisOptions = apply(Seq(entrypoint), dependencies)
 
   val mainMethod = "main([Ljava/lang/String;)V"
 
