@@ -39,4 +39,5 @@ class FlexibleCallGraphBuilder(
   setInstanceKeys(instanceKeys)
 
   val cg = makeCallGraph(options)
+  val cache = _cache
 }
