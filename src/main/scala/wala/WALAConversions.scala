@@ -16,6 +16,7 @@ import com.ibm.wala.util.Predicate
 import scala.collection._
 import com.ibm.wala.util.intset.SparseIntSet
 import com.ibm.wala.ipa.slicer.Statement
+import wala.WALAConversions.WrappedIntSet
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -110,7 +111,7 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     def prettyPrint(): String = f.getName().toString()
   }
 
-  class WrappedIntSet(s: IntSet) {
+  class WrappedIntSet(s: IntSet) extends Set[Int] {
     def contains(key: Int) = s.contains(key)
     def iterator: Iterator[Int] = {
       val it = s.intIterator()
@@ -119,14 +120,14 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
         def next = it.next()
       }
     }
-    def +(elem: Int) = s.union(SparseIntSet.singleton(elem))
+    def +(elem: Int) = new WrappedIntSet(s.union(SparseIntSet.singleton(elem)))
     def -(elem: Int) = throw new Exception("unsupported, implement this if you need it")
 
     def |(other: IntSet) = s.union(other)
     def &(other: IntSet) = s.intersection(other)
     def intersects(other: IntSet) = s.containsAny(other)
 
-    def foreach[U](f: Int => U) = {
+    override def foreach[U](f: Int => U) = {
       s.foreach(new IntSetAction() {
         override def act(x: Int) = f(x)
       })
