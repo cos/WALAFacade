@@ -41,7 +41,7 @@ object AnalysisOptions {
     apply(entrypoints, scope)
   }
 
-  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency])(implicit config: Config): AnalysisOptions = apply(Seq(entrypoint), dependencies)
+  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency])(implicit config: Config = ConfigFactory.load): AnalysisOptions = apply(Seq(entrypoint), dependencies)
 
   val mainMethod = "main([Ljava/lang/String;)V"
 

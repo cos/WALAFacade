@@ -14,10 +14,11 @@ import com.typesafe.config.Config
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.ALLOCATIONS
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.SMUSH_STRINGS
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.SMUSH_THROWABLES
+import com.typesafe.config.ConfigFactory
 
 object FlexibleCallGraphBuilder {
   def apply(entrypoint: (String, String), dependencies: Iterable[Dependency])(implicit config: Config) = new FlexibleCallGraphBuilder(AnalysisOptions(Seq(entrypoint), dependencies))
-  def apply(entrypoint: (String, String), dependency: String)(implicit config: Config): FlexibleCallGraphBuilder = apply(entrypoint, Seq(Dependency(dependency)))
+  def apply(entrypoint: (String, String), dependency: String)(implicit config: Config = ConfigFactory.load): FlexibleCallGraphBuilder = apply(entrypoint, Seq(Dependency(dependency)))
   def apply()(implicit config: Config) = new FlexibleCallGraphBuilder(AnalysisOptions())
 }
 
