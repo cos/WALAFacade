@@ -42,12 +42,14 @@ trait WALAConversionsForP { self: WALAConversions =>
   implicit def enhanceP(p: P): EnhancedP = new EnhancedP(p)
 
   implicit def enhancePK(p: PointerKey) = new {
-    def prettyPrint(): String = p match {
+    def prettyPrint(): String = prettyPrint(".")
+
+    def prettyPrint(sep: String): String = p match {
       case p: P => p.prettyPrint
-      case p: AbstractFieldPointerKey => "IFK:"+p.getInstanceKey().prettyPrint + (p match {
-        case p: InstanceFieldKey => "." + p.getField().prettyPrint
-        case p: ArrayContentsKey => ".[]"
-        case p: ArrayLengthKey => ".ARR_LENGTH"
+      case p: AbstractFieldPointerKey => "IFK:" + p.getInstanceKey().prettyPrint + (p match {
+        case p: InstanceFieldKey => sep + p.getField().prettyPrint
+        case p: ArrayContentsKey => sep + "[]"
+        case p: ArrayLengthKey => sep + "ARR_LENGTH"
       })
       case _ => p.toString
     }
