@@ -26,6 +26,10 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     def test(t: T) = f(t)
   }
 
+  implicit def makeIntSetActionFromFunction(f: Function1[Int, Unit]) = new IntSetAction {
+    def act(t: Int) = f(t)
+  }
+
   implicit def m2named(m: M): Named = new Named {
     def name = m.getSelector().getName().toString()
   }
@@ -106,7 +110,7 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     def prettyPrint(): String = f.getName().toString()
   }
 
-  class MyIntSet(s: IntSet) extends immutable.Set[Int] {
+  class WrappedIntSet(s: IntSet) {
     def contains(key: Int) = s.contains(key)
     def iterator: Iterator[Int] = {
       val it = s.intIterator()
@@ -115,17 +119,21 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
         def next = it.next()
       }
     }
-    def +(elem: Int) = new MyIntSet(s.union(SparseIntSet.singleton(elem)))
+    def +(elem: Int) = s.union(SparseIntSet.singleton(elem))
     def -(elem: Int) = throw new Exception("unsupported, implement this if you need it")
 
-    override def foreach[U](f: Int => U) = {
+    def |(other: IntSet) = s.union(other)
+    def &(other: IntSet) = s.intersection(other)
+    def intersects(other: IntSet) = s.containsAny(other)
+
+    def foreach[U](f: Int => U) = {
       s.foreach(new IntSetAction() {
         override def act(x: Int) = f(x)
       })
     }
   }
 
-  implicit def intsetSet(s: IntSet) = new MyIntSet(s)
+  implicit def intsetSet(s: IntSet) = new WrappedIntSet(s)
 
   def inApplicationScope(n: N): Boolean = inApplicationScope(n.m)
   def inApplicationScope(m: M): Boolean = {

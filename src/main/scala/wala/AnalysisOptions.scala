@@ -9,13 +9,12 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
 import com.ibm.wala.ipa.callgraph.Entrypoint
 import scala.collection.JavaConverters._
 import wala.AnalysisScope._
+import com.typesafe.config.Config
 
 class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy)
   extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints)
 
 object AnalysisOptions {
-  val config = ConfigFactory.load()
-
   def apply(entrypoints: Iterable[(String, String)], scope: AnalysisScope) = {
 
     implicit val s = scope
@@ -26,16 +25,26 @@ object AnalysisOptions {
     new AnalysisOptions(scope, entrypointsW, cha)
   }
 
-  def apply(entrypoints: Iterable[(String, String)], dependencies: Iterable[Dependency]): AnalysisOptions = {
+  def apply()(implicit config: Config): AnalysisOptions = {
+    val binDep = config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
+    val jarDep = config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
+
+    val dep = binDep ++ jarDep
+    apply((config.getString("wala.entry.class"), config.getString("wala.entry.method")), dep)
+  }
+
+  def apply(
+    entrypoints: Iterable[(String, String)],
+    dependencies: Iterable[Dependency])(implicit config: Config): AnalysisOptions = {
 
     val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"), dependencies)
     apply(entrypoints, scope)
   }
 
-  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency]): AnalysisOptions = apply(Seq(entrypoint), dependencies)
+  def apply(entrypoint: (String, String), dependencies: Iterable[Dependency])(implicit config: Config): AnalysisOptions = apply(Seq(entrypoint), dependencies)
 
   val mainMethod = "main([Ljava/lang/String;)V"
-  
+
   def makeEntrypoint(entryClass: String, entryMethod: String)(implicit scope: AnalysisScope, cha: ClassHierarchy): Entrypoint = {
     val typeReference: TypeReference = TypeReference.findOrCreate(scope.getLoader(AnalysisScope.Application),
       TypeName.string2TypeName(entryClass))
