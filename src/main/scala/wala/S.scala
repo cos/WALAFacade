@@ -19,12 +19,7 @@ object S {
 class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
   def prettyPrint(): String =
-    printCodeLocation() +
-      //      (lockset match {
-      //        case Some(lockset) => lockset.map("         "+_.prettyPrint).reduceOption(_+"\n"+_).map("\n"+_).getOrElse("")
-      //        case None => ""
-      //      }) +
-      (if (debug.detailContexts) " --- " + n else "")
+    printCodeLocation() + (if (debug.detailContexts) " --- " + n else "")
 
   def printCodeLocation(): String = {
     if (irNo >= 0) {
