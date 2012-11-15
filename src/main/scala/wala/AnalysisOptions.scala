@@ -20,26 +20,31 @@ object AnalysisOptions {
     implicit val s = scope
     implicit val cha = ClassHierarchy.make(scope)
 
+    println(scope)
+
     val entrypointsW = entrypoints map { case (klass, method) => makeEntrypoint(klass, method) } asJava
 
     new AnalysisOptions(scope, entrypointsW, cha)
   }
 
   def apply()(implicit config: Config = ConfigFactory.load): AnalysisOptions = {
-    val binDep = config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
-    val jarDep = config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
-
-    val dep = binDep ++ jarDep
-    apply((config.getString("wala.entry.class"), config.getString("wala.entry.method")), dep)
+    apply((config.getString("wala.entry.class"), config.getString("wala.entry.method")), Set())
   }
 
   def apply(
     entrypoints: Iterable[(String, String)],
-    dependencies: Iterable[Dependency])(implicit config: Config): AnalysisOptions = {
+    dependencies: Iterable[Dependency])(
+      implicit config: Config): AnalysisOptions = {
 
-    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"), dependencies)
+    val binDep = config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
+    val jarDep = config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
+    val dep = binDep ++ jarDep ++ dependencies
+
+    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"), dep)
     apply(entrypoints, scope)
   }
+
+  def apply(klass: String, method: String)(implicit config: Config): AnalysisOptions = apply((klass, method), Seq())
 
   def apply(entrypoint: (String, String),
     dependencies: Iterable[Dependency])(implicit config: Config): AnalysisOptions = apply(Seq(entrypoint), dependencies)
