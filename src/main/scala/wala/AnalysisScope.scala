@@ -69,7 +69,8 @@ class AnalysisScope(jreLibPath: String, exclusionsFile: String, dependencies: It
   def addBinaryDependency(directory: String, analysisScope: Atom = Application) {
     debug("Binary: " + directory);
     val sd = getFile(directory);
-    assert(sd.isDirectory())
+    assert(sd.exists(), "dependency \""+directory+"\" not found")
+    assert(sd.isDirectory(), "dependency \""+directory+"\" not a directory")
     addToScope(getLoader(analysisScope), new BinaryDirectoryTreeModule(sd));
   }
 
