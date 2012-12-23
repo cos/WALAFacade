@@ -13,13 +13,16 @@ import sppa.util.debug
 import java.util.Collections
 import com.ibm.wala.classLoader.Language
 
+import AnalysisScope._
+import java.io.ByteArrayInputStream
+
 object AnalysisScope {
   type Scope = Atom
   val Primordial = com.ibm.wala.ipa.callgraph.AnalysisScope.PRIMORDIAL
   val Extension = com.ibm.wala.ipa.callgraph.AnalysisScope.EXTENSION
   val Application = com.ibm.wala.ipa.callgraph.AnalysisScope.APPLICATION
   val Synthetic = com.ibm.wala.ipa.callgraph.AnalysisScope.SYNTHETIC
-  def apply(jreLibPath: String, exclusionsFile: String) = new AnalysisScope(jreLibPath, exclusionsFile)
+  def apply(jreLibPath: String, exclusions: String) = new AnalysisScope(jreLibPath, exclusions)
 }
 
 object DependencyNature extends Enumeration {
@@ -27,27 +30,25 @@ object DependencyNature extends Enumeration {
   val Binary, BinaryDirectory, Jar, JarDirectory = Value
 }
 
-import DependencyNature._
-import AnalysisScope._
-
 object Dependency {
-  def apply(file: String): Dependency = apply(file, BinaryDirectory, Application)
-  def apply(file: String, nature: DependencyNature): Dependency = apply(file, nature, Application)
+  def apply(file: String): Dependency = apply(file, DependencyNature.BinaryDirectory, Application)
+  def apply(file: String, nature: DependencyNature.DependencyNature): Dependency = apply(file, nature, Application)
 }
 
-case class Dependency(file: String, nature: DependencyNature, scope: Scope)
+case class Dependency(file: String, nature: DependencyNature.DependencyNature, scope: Scope)
 
-class AnalysisScope(jreLibPath: String, exclusionsFile: String, dependencies: Iterable[Dependency]) extends com.ibm.wala.ipa.callgraph.AnalysisScope(Collections.singleton(Language.JAVA)) {
+class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterable[Dependency]) extends com.ibm.wala.ipa.callgraph.AnalysisScope(Collections.singleton(Language.JAVA)) {
   val UNDER_ECLIPSE = false;
   import AnalysisScope._
+  import DependencyNature._
 
-  def this(jreLibPath: String, exclusionsFile: String) = this(jreLibPath, exclusionsFile, Seq())
+  def this(jreLibPath: String, exclusions: String) = this(jreLibPath, exclusions, Seq())
 
   initForJava()
 
   addToScope(getLoader(Primordial), new JarFile(jreLibPath))
 
-  setExclusions(FileOfClasses.createFileOfClasses(new File(exclusionsFile)))
+  setExclusions(new FileOfClasses(new ByteArrayInputStream(exclusions.getBytes("UTF-8"))))
 
   addDependencies(dependencies)
 

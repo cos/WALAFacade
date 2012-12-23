@@ -40,7 +40,7 @@ object AnalysisOptions {
     val jarDep = config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
     val dep = binDep ++ jarDep ++ dependencies
 
-    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions-file"), dep)
+    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions"), dep)
     apply(entrypoints, scope)
   }
 
