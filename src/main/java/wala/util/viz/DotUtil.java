@@ -243,7 +243,7 @@ public class DotUtil {
 			final NodeDecorator labels, final String title)
 			throws WalaException {
 		final StringBuffer result = new StringBuffer(
-				"digraph \"DirectedGraph\" {\n xlabel=between; size=\"80.0,36,0\"; ratio=compress;\n"); // rankdir=LR;
+				"digraph \"DirectedGraph\" {\n xlabel=between; \n"); // rankdir=LR;
 
 		if (title != null) {
 			result.append("graph [label = \"" + title

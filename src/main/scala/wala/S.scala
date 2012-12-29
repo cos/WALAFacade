@@ -14,12 +14,15 @@ object S {
     Some((s.n, s.i))
   }
   def apply(n: N, i: I) = new S(n, i)
+
+  val accessesRepo = collection.mutable.Map[S[I], Int]()
 }
 
 class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
-  def prettyPrint(): String =
-    printCodeLocation() + (if (debug.detailContexts) " --- " + n else "")
+  def prettyPrint(): String = printCodeLocation() +
+    " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " +
+    (if (debug.detailContexts) " --- " + n else "")
 
   def printCodeLocation(): String = {
     if (irNo >= 0) {
