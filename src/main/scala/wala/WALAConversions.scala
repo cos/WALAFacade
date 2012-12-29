@@ -17,6 +17,7 @@ import scala.collection._
 import com.ibm.wala.util.intset.SparseIntSet
 import com.ibm.wala.ipa.slicer.Statement
 import wala.WALAConversions.WrappedIntSet
+import com.ibm.wala.ipa.slicer.StatementWithInstructionIndex
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -30,6 +31,8 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
   implicit def makeIntSetActionFromFunction(f: Function1[Int, Unit]) = new IntSetAction {
     def act(t: Int) = f(t)
   }
+
+  implicit def makeSFromStatement(s: StatementWithInstructionIndex) = S(s.getNode(), s.getInstruction())
 
   implicit def m2named(m: M): Named = new Named {
     def name = m.getSelector().getName().toString()
