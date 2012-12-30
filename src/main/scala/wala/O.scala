@@ -12,12 +12,18 @@ object O {
       case _ => None
     }
   }
-  def prettyPrint(o: O) = o match {
-    case o: AllocationSiteInNode =>
-      (o.getConcreteType().prettyPrint + ": " + codeLocation(o.getNode(), o.getSite().getProgramCounter())) +
-        (if (debug.detailContexts) " --- " + o.getNode() else "")
+  def prettyPrint(o: O) = {
+    val id = printRepo.getOrElseUpdate(o, printRepo.size)
+    o match {
+      case o: AllocationSiteInNode =>
+        (o.getConcreteType().prettyPrint + ": " + codeLocation(o.getNode(), o.getSite().getProgramCounter())) +
+          " [o " + id + " ] " +
+          (if (debug.detailContexts) " --- " + o.getNode() else "")
 
-    case o: StaticClassObject => "Static: " + o.klass.prettyPrint()
-    case _ => o.toString
+      case o: StaticClassObject => "Static: " + o.klass.prettyPrint() + " [o " + id + " ] "
+      case _ => o.toString + " [o " + id + " ] "
+    }
   }
+
+  val printRepo = collection.mutable.Map[O, Int]()
 }
