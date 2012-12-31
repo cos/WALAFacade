@@ -139,11 +139,10 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
 
   implicit def intsetSet(s: IntSet) = new WrappedIntSet(s)
 
+  
   def inApplicationScope(n: N): Boolean = inApplicationScope(n.m)
-  def inApplicationScope(m: M): Boolean = {
-    val classLoader = m.getDeclaringClass().getClassLoader();
-    classLoader.getReference() == ClassLoaderReference.Application
-  }
+  def inApplicationScope(m: M): Boolean = inApplicationScope(m.getDeclaringClass)
+  def inApplicationScope(c: C): Boolean = c.getClassLoader().getReference() == ClassLoaderReference.Application
 
   def inPrimordialScope(n: N): Boolean = inPrimordialScope(n.m)
   def inPrimordialScope(m: M) = {
