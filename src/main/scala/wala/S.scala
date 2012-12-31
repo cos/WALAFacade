@@ -21,8 +21,7 @@ object S {
 class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
   def prettyPrint(): String = printCodeLocation() +
-    " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " +
-    (if (debug.detailContexts) " --- " + n else "")
+  (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n else "")
 
   def printCodeLocation(): String = {
     if (irNo >= 0) {

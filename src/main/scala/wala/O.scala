@@ -14,15 +14,13 @@ object O {
   }
   def prettyPrint(o: O) = {
     val id = printRepo.getOrElseUpdate(o, printRepo.size)
-    o match {
+    (o match {
       case o: AllocationSiteInNode =>
         (o.getConcreteType().prettyPrint + ": " + codeLocation(o.getNode(), o.getSite().getProgramCounter())) +
-          " [o " + id + " ] " +
           (if (debug.detailContexts) " --- " + o.getNode() else "")
-
-      case o: StaticClassObject => "Static: " + o.klass.prettyPrint() + " [o " + id + " ] "
-      case _ => o.toString + " [o " + id + " ] "
-    }
+      case o: StaticClassObject => "Static: " + o.klass.prettyPrint()
+      case _ => o.toString
+    }) + (if (debug.detailContexts) " [o " + id + " ] " else "")
   }
 
   val printRepo = collection.mutable.Map[O, Int]()
