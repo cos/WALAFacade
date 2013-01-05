@@ -17,7 +17,7 @@ object O {
     (o match {
       case o: AllocationSiteInNode =>
         (o.getConcreteType().prettyPrint + ": " + codeLocation(o.getNode(), o.getSite().getProgramCounter())) +
-          (if (debug.detailContexts) " --- " + o.getNode() else "")
+          (if (debug.detailContexts) " --- " + o.getNode().getContext() else "")
       case o: StaticClassObject => "Static: " + o.klass.prettyPrint()
       case _ => o.toString
     }) + (if (debug.detailContexts) " [o " + id + " ] " else "")
