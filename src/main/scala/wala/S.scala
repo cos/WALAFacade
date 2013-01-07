@@ -40,6 +40,8 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
   lazy val m = n.m
 
+  lazy val sourceFilePath = m.getDeclaringClass().sourceFilePath
+  
   lazy val lineNo = m.getLineNumber(irNo)
 
   lazy val irNo = n.getIR().getInstructions().findIndexOf(ii => i.equals(ii))

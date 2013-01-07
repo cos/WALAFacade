@@ -18,6 +18,7 @@ import com.ibm.wala.util.intset.SparseIntSet
 import com.ibm.wala.ipa.slicer.Statement
 import wala.WALAConversions.WrappedIntSet
 import com.ibm.wala.ipa.slicer.StatementWithInstructionIndex
+import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -84,7 +85,11 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     }
   }
 
-  def codeLocation(n: N, bytecodeIndex: Int): String = {
+  implicit def cWithSourceFilePath(c: C) = new {
+    def sourceFilePath = Option(c) map { _.getName.toString.substring(1).split("\\$")(0) } getOrElse ""
+  }
+
+  def printCodeLocation(n: N, bytecodeIndex: Int): String = {
     printCodeLocation(n.getMethod(), bytecodeIndex)
   }
 
@@ -99,7 +104,7 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
   def printCodeLocation(m: IMethod, bytecodeIndex: Int): String = {
     val lineNo = m.lineNoFromBytecodeIndex(bytecodeIndex)
     val className = m.getDeclaringClass().getName().getClassName().toString()
-    "" + m.prettyPrint + "(" + className + ".java:" + lineNo + ")"
+    "" + m.prettyPrint + "(" + className.split("\\$")(0) + ".java:" + lineNo + ")"
   }
 
   implicit def iWithEasyUses(i: I) = new {
@@ -108,6 +113,13 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
 
   implicit def o2prettyprintable(o: O): PrettyPrintable = new PrettyPrintable {
     def prettyPrint(): String = O.prettyPrint(o)
+  }
+
+  implicit def oWithS(o: O) = new {
+    def s: Option[S[I]] = o match {
+      case o: AllocationSiteInNode => Some(S(o.getNode, o.getNode.getIR.getNew(o.getSite)))
+      case _ => None
+    }
   }
 
   implicit def f2prettyprintable(f: F): PrettyPrintable = new PrettyPrintable {
@@ -139,16 +151,9 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
 
   implicit def intsetSet(s: IntSet) = new WrappedIntSet(s)
 
-  
   def inApplicationScope(n: N): Boolean = inApplicationScope(n.m)
   def inApplicationScope(m: M): Boolean = inApplicationScope(m.getDeclaringClass)
   def inApplicationScope(c: C): Boolean = c.getClassLoader().getReference() == ClassLoaderReference.Application
-
-  def inPrimordialScope(n: N): Boolean = inPrimordialScope(n.m)
-  def inPrimordialScope(m: M) = {
-    val classLoader = m.getDeclaringClass().getClassLoader();
-    classLoader.getReference() == ClassLoaderReference.Primordial
-  }
 
   object unknownO extends O {
     override def getConcreteType() = null

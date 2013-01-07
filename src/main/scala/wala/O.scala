@@ -16,7 +16,7 @@ object O {
     val id = printRepo.getOrElseUpdate(o, printRepo.size)
     (o match {
       case o: AllocationSiteInNode =>
-        (o.getConcreteType().prettyPrint + ": " + codeLocation(o.getNode(), o.getSite().getProgramCounter())) +
+        (o.getConcreteType().prettyPrint + ": " + printCodeLocation(o.getNode(), o.getSite().getProgramCounter())) +
           (if (debug.detailContexts) " --- " + o.getNode().getContext() else "")
       case o: StaticClassObject => "Static: " + o.klass.prettyPrint()
       case _ => o.toString
