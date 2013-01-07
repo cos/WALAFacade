@@ -77,7 +77,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
 
   def getLoader() = AnalysisScope.this.getClass().getClassLoader();
 
-  def addJarDirectoryDependency(path: String, scope: Scope = Application) {
+  def addJarDirectoryDependency(path: String, scope: Scope = Extension) {
     debug("Jar folder: " + path);
     val dir = getFile(path);
     val delim = if (path.endsWith("/")) "" else "/"
@@ -96,7 +96,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
     }
   }
 
-  def addJarDependency(file: String, scope: Scope = Application) {
+  def addJarDependency(file: String, scope: Scope = Extension) {
     debug("Jar: " + file);
     val M = if (UNDER_ECLIPSE)
       new FileProvider().getJarFileModule(file, getLoader());
