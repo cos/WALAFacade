@@ -33,4 +33,7 @@ class FlexibleCallGraphBuilder(
 
   val cg = makeCallGraph(options)
   val cache = _cache
+  
+  // expose implicits
+  implicit val implicitCha = cha
 }
