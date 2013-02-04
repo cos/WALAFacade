@@ -1,13 +1,12 @@
-package wala.extra;
+package edu.illinois.wala.classLoader
 
 import com.ibm.wala.classLoader.IClass
 import com.ibm.wala.classLoader.IField
 import com.ibm.wala.ipa.cha.ClassHierarchy
 import com.ibm.wala.types.FieldReference
 import com.ibm.wala.types.TypeReference
-import com.ibm.wala.util.debug.Assertions
 import com.ibm.wala.util.debug.UnimplementedError
-import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.strings.Atom
 import java.util.Collections
 
 /**

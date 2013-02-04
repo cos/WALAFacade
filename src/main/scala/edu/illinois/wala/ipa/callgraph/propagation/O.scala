@@ -3,13 +3,12 @@ import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
 import sppa.util.debug
 import wala.WALAConversions._
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey
-import wala.extra.StaticClassObject
+import edu.illinois.wala.ipa.callgraph.propagation.StaticClassObject
 import wala.WALAConversions
 import edu.illinois.wala.S
 
 object O {
   import wala.WALAConversions._
-  import wala.extra.StaticClassObject
 
   def unapply(o: O): Option[(N, I)] = {
     o match {
