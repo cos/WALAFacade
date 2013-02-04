@@ -39,5 +39,3 @@ class WrappedIntSet(s: IntSet) extends Set[Int] {
     })
   }
 }
-
-  

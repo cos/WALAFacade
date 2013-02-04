@@ -28,8 +28,6 @@ import edu.illinois.wala._
 import edu.illinois.wala.ssa.V
 
 class WALAConversions extends TypeAliases
-  with WALAConversionsForP
-  with WrapO
   with edu.illinois.wala.util.Wrapper
   with ipa.slicer.Wrapper
   with classLoader.Wrapper

@@ -18,11 +18,15 @@ import com.ibm.wala.ssa.SSAMonitorInstruction
 import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey
 import edu.illinois.wala.ssa.V
 import com.ibm.wala.ssa.SSAGetInstruction
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey
 
 trait TypeAliases {
   type SS = BasicBlockInContext[IExplodedBasicBlock]
   type N = CGNode
-  type P = LocalPointerKey
+  
+  type LocalP = LocalPointerKey
+  
+  type P = PointerKey
 
   type O = InstanceKey
 

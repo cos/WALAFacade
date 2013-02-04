@@ -19,7 +19,7 @@ object O {
   }
 }
 
-trait WrapO { self: WALAConversions =>
+trait WrapO {
   implicit def wrapAllocationSiteInNode(o: AllocationSiteInNode): RichAllocationSiteInNode = new RichAllocationSiteInNode(o)
   implicit def wrapStaticClassObject(o: StaticClassObject): RichStaticClassObject = new RichStaticClassObject(o)
   implicit def wrapO(o: InstanceKey): RichO = new RichO(o)

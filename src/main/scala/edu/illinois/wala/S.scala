@@ -5,6 +5,7 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock
 import com.ibm.wala.classLoader.ShrikeBTMethod
 import sppa.util.debug
 import edu.illinois.wala.ssa.V
+import edu.illinois.wala.ipa.callgraph.propagation.P
 
 object S {
   import wala.WALAConversions
@@ -22,7 +23,7 @@ object S {
 class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
   def prettyPrint(): String = printCodeLocation() +
-  (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
+    (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
 
   def printCodeLocation(): String = {
     if (irNo >= 0) {
@@ -42,7 +43,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
   lazy val m = n.m
 
   lazy val sourceFilePath = m.getDeclaringClass().sourceFilePath
-  
+
   lazy val lineNo = m.getLineNumber(irNo)
 
   lazy val irNo = n.getIR().getInstructions().indexOf(ii => i.equals(ii))
@@ -77,4 +78,11 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
   }
 
   override def hashCode = n.hashCode * 41 + i.hashCode
+
+  lazy val refP: Option[P] = i match {
+    case i: AccessI if !i.isStatic => Some(P(n, i.getRef()))
+    case i: ArrayReferenceI => Some(P(n, i.getArrayRef()))
+    case i: InvokeI if !i.isStatic => Some(P(n, i.getReceiver()))
+    case _ => None
+  }
 }
