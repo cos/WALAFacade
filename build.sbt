@@ -3,7 +3,7 @@ name := "WALAFacade"
 
 version := "1.0"
 
-organization := "IBM"
+organization := "University of Illinois"
 
 libraryDependencies += "junit" % "junit" % "4.+"
 
