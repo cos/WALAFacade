@@ -19,6 +19,9 @@ import com.ibm.wala.ipa.slicer.Statement
 import wala.WALAConversions.WrappedIntSet
 import com.ibm.wala.ipa.slicer.StatementWithInstructionIndex
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
+import com.ibm.wala.util.collections.EmptyIterator
+import com.ibm.wala.ipa.callgraph.CallGraph
+import com.ibm.wala.classLoader.NewSiteReference
 
 class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
   trait Named {
@@ -157,7 +160,9 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
 
   object unknownO extends O {
     override def getConcreteType() = null
-    override def toString = "UNKOWN object"
+    override def getCreationSites(cg: CallGraph) = EmptyIterator.instance()
+    
+    override def toString = "UNKOWN object" 
   }
 
   //  	public static String variableName(Integer v, CGNode cgNode,
