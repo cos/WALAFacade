@@ -9,6 +9,7 @@ trait Wrapper {
 	implicit def wrapI(i: I) = new RichI(i)
 	implicit def wrapI(i: PutI) = new RichPutI(i)
 	implicit def wrapI(i: GetI) = new RichGetI(i)
+	implicit def wrapInvokeI(i: InvokeI) = new RichInvokeI(i)
 	
 	implicit def unwrapV(v: V) = v.v 
 }
