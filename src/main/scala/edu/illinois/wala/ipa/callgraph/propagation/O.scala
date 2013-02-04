@@ -4,8 +4,8 @@ import sppa.util.debug
 import wala.WALAConversions._
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey
 import wala.extra.StaticClassObject
-import wala.S
 import wala.WALAConversions
+import edu.illinois.wala.S
 
 object O {
   import wala.WALAConversions._
@@ -19,7 +19,7 @@ object O {
   }
 }
 
-trait WrapO { self: WALAConversions => 
+trait WrapO { self: WALAConversions =>
   implicit def wrapAllocationSiteInNode(o: AllocationSiteInNode): RichAllocationSiteInNode = new RichAllocationSiteInNode(o)
   implicit def wrapStaticClassObject(o: StaticClassObject): RichStaticClassObject = new RichStaticClassObject(o)
   implicit def wrapO(o: InstanceKey): RichO = new RichO(o)

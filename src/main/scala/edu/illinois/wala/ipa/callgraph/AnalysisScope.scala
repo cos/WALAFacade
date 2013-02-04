@@ -1,4 +1,4 @@
-package wala
+package edu.illinois.wala.ipa.callgraph
 
 import java.io.File
 import java.util.jar.JarFile
@@ -12,9 +12,9 @@ import com.ibm.wala.util.strings.Atom
 import sppa.util.debug
 import java.util.Collections
 import com.ibm.wala.classLoader.Language
-
 import AnalysisScope._
 import java.io.ByteArrayInputStream
+import scala.Array.canBuildFrom
 
 object AnalysisScope {
   type Scope = Atom

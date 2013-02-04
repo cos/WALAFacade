@@ -16,31 +16,32 @@ import com.ibm.wala.classLoader.IField
 import com.ibm.wala.ssa.SSAInvokeInstruction
 import com.ibm.wala.ssa.SSAMonitorInstruction
 import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey
+import edu.illinois.wala.ssa.V
+import com.ibm.wala.ssa.SSAGetInstruction
 
 trait TypeAliases {
   type SS = BasicBlockInContext[IExplodedBasicBlock]
-  type V = Int
   type N = CGNode
   type P = LocalPointerKey
-  
+
   type O = InstanceKey
-  
-  
+
   type F = IField
-  
-  type WithReference = {def ref: V}
+
+  type WithReference = { def ref: Int }
   type ReferenceI = I with WithReference
-  
+
   type I = SSAInstruction
   type PutI = SSAPutInstruction
+  type GetI = SSAGetInstruction
   type AccessI = SSAFieldAccessInstruction
-  
+
   type ArrayStoreI = SSAArrayStoreInstruction
   type ArrayReferenceI = SSAArrayReferenceInstruction
   type InvokeI = SSAInvokeInstruction
-  
+
   type MonitorI = SSAMonitorInstruction
-  
+
   type G = CallGraph
   type C = IClass
   type M = IMethod

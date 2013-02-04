@@ -7,6 +7,8 @@ import com.ibm.wala.ipa.callgraph.propagation.ArrayContentsKey
 import com.ibm.wala.ipa.modref.ArrayLengthKey
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey
+import edu.illinois.wala.S
+import edu.illinois.wala.ssa.V
 
 // "Pointer Local" - equivalent of LocalPointerKey
 trait WALAConversionsForP { self: WALAConversions =>
@@ -22,7 +24,7 @@ trait WALAConversionsForP { self: WALAConversions =>
 
   class EnhancedP(p: P) {
     def n = p.getNode()
-    def v = p.getValueNumber()
+    def v = V(p.getValueNumber())
     def getDef() = n.getDU().getDef(v)
     def getUses(): Iterable[I] = n.getDU().getUses(v).toIterable
 
@@ -30,7 +32,7 @@ trait WALAConversionsForP { self: WALAConversions =>
      * Gets all uses of this pointer that write to a field of it
      */
     def getPuts(): Iterable[SSAPutInstruction] =
-      (for (i <- getUses() if i.isInstanceOf[PutI] && i.asInstanceOf[PutI].getRef() == v)
+      (for (i <- getUses() if i.isInstanceOf[PutI] && V(i.asInstanceOf[PutI].getRef()) == v)
         yield i.asInstanceOf[SSAPutInstruction])
 
     def variableNames(): Iterable[String] =

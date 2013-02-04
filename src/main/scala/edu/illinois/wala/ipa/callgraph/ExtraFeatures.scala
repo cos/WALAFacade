@@ -1,7 +1,8 @@
-package wala
+package edu.illinois.wala.ipa.callgraph
 import scala.collection.JavaConverters._
 import scala.collection._
 import wala.WALAConversions._
+import edu.illinois.wala.S
 
 trait ExtraFeatures { self: FlexibleCallGraphBuilder =>
 

@@ -1,4 +1,4 @@
-package wala
+package edu.illinois.wala.ipa.callgraph
 
 import com.typesafe.config.ConfigFactory
 import com.ibm.wala.ipa.cha.ClassHierarchy
@@ -8,7 +8,6 @@ import com.ibm.wala.types.TypeName
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
 import com.ibm.wala.ipa.callgraph.Entrypoint
 import scala.collection.JavaConverters._
-import wala.AnalysisScope._
 import com.typesafe.config.Config
 
 class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy)

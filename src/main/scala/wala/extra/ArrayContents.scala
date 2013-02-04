@@ -16,7 +16,7 @@ import java.util.Collections
  *
  */
 
-object arrayContents extends IField {
+object ArrayContents extends IField {
 
   override def getFieldTypeReference: TypeReference = throw new UnimplementedError()
 

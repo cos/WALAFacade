@@ -1,19 +1,11 @@
-package wala
+package edu.illinois.wala.ipa.callgraph
 
 import com.ibm.wala.ipa.callgraph._
 import com.ibm.wala.ipa.callgraph.propagation._
 import com.ibm.wala.ipa.cha.ClassHierarchy
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory
-import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter
-import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter
-import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter
 import scala.collection.JavaConverters._
-import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector
 import com.typesafe.config.Config
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.ALLOCATIONS
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.SMUSH_STRINGS
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys.SMUSH_THROWABLES
 import com.typesafe.config.ConfigFactory
 
 object FlexibleCallGraphBuilder {

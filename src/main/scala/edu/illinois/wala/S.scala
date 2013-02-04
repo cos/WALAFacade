@@ -1,9 +1,10 @@
-package wala
+package edu.illinois.wala
 import com.ibm.wala.ipa.cfg.BasicBlockInContext
-import WALAConversions._
+import wala.WALAConversions._
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock
 import com.ibm.wala.classLoader.ShrikeBTMethod
 import sppa.util.debug
+import edu.illinois.wala.ssa.V
 
 object S {
   import wala.WALAConversions
@@ -28,7 +29,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
       n.getMethod() match {
         case m: ShrikeBTMethod => {
           val bytecodeIndex = m.getBytecodeIndex(irNo)
-          WALAConversions.printCodeLocation(m, bytecodeIndex)
+          wala.WALAConversions.printCodeLocation(m, bytecodeIndex)
         }
         case _ => m.toString()
       }
@@ -47,8 +48,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
   lazy val irNo = n.getIR().getInstructions().indexOf(ii => i.equals(ii))
 
   def valuesForVariableName(name: String): Iterable[V] = {
-    val maxValue = n.getIR().getSymbolTable().getMaxValueNumber();
-    Stream.range(1, maxValue + 1).filter(v => {
+    n.getIR().getSymbolTable().filter(v => {
       val names = n.getIR().getLocalNames(irNo, v)
       if (names != null) {
         names.contains(name)
@@ -63,7 +63,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
     case _ => false
   }
 
-  def variableNames(v: Int): Iterable[String] = {
+  def variableNames(v: V): Iterable[String] = {
     if (irNo == -1) return Iterable[String]()
     val names = n.getIR().getLocalNames(irNo, v)
     if (names != null) names.filter(_ != null) else Iterable()
