@@ -33,7 +33,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
         case _ => m.toString()
       }
     } else {
-      val index = n.instructions collect { case i if i != null => i.toString } findIndexOf { _ == i.toString }
+      val index = n.instructions collect { case i if i != null => i.toString } indexWhere { _ == i.toString }
       "IRNo-1 " + index + " ---- " + i
     }
   }
@@ -44,7 +44,7 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
   
   lazy val lineNo = m.getLineNumber(irNo)
 
-  lazy val irNo = n.getIR().getInstructions().findIndexOf(ii => i.equals(ii))
+  lazy val irNo = n.getIR().getInstructions().indexOf(ii => i.equals(ii))
 
   def valuesForVariableName(name: String): Iterable[V] = {
     val maxValue = n.getIR().getSymbolTable().getMaxValueNumber();
