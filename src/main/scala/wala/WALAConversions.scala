@@ -22,8 +22,9 @@ import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
 import com.ibm.wala.util.collections.EmptyIterator
 import com.ibm.wala.ipa.callgraph.CallGraph
 import com.ibm.wala.classLoader.NewSiteReference
+import edu.illinois.wala.ipa.callgraph.propagation.WrapO
 
-class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP {
+class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConversionsForP with WrapO {
   trait Named {
     def name(): String
   }
@@ -46,8 +47,8 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
     def name = c.getName().getClassName().toString()
   }
 
-  trait PrettyPrintable {
-    def prettyPrint(): String
+  trait PrettyPrintable extends Any {
+    def prettyPrint: String
   }
 
   implicit def m2prettyprintable(m: IMethod): PrettyPrintable = new PrettyPrintable {
@@ -112,17 +113,6 @@ class WALAConversions extends TypeAliases with WALAConversionsForN with WALAConv
 
   implicit def iWithEasyUses(i: I) = new {
     def uses: Iterable[V] = Stream.range(0, i.getNumberOfUses()).map(index => { i.getUse(index) })
-  }
-
-  implicit def o2prettyprintable(o: O): PrettyPrintable = new PrettyPrintable {
-    def prettyPrint(): String = O.prettyPrint(o)
-  }
-
-  implicit def oWithS(o: O) = new {
-    def s: Option[S[I]] = o match {
-      case o: AllocationSiteInNode => Some(S(o.getNode, o.getNode.getIR.getNew(o.getSite)))
-      case _ => None
-    }
   }
 
   implicit def f2prettyprintable(f: F): PrettyPrintable = new PrettyPrintable {

@@ -10,6 +10,7 @@ import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey
 
 // "Pointer Local" - equivalent of LocalPointerKey
 trait WALAConversionsForP { self: WALAConversions =>
+
   object P {
     def apply(n: N, v: Int) = {
       new P(n, v)
