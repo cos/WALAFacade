@@ -14,4 +14,5 @@ trait Wrapper {
   implicit def wrapArrayReferenceI(i: ArrayReferenceI) = new RichArrayReferenceI(i)
 
   implicit def unwrapV(v: V) = v.v
+  implicit def unwrapIRNo(i: IRNo) = i.i
 }

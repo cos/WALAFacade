@@ -26,18 +26,25 @@ import edu.illinois.wala.S
 import edu.illinois.wala.Named
 import edu.illinois.wala._
 import edu.illinois.wala.ssa.V
+import edu.illinois.wala.TypeAliases
 
 class WALAConversions extends TypeAliases
   with edu.illinois.wala.util.Wrapper
   with ipa.slicer.Wrapper
   with classLoader.Wrapper
   with types.Wrapper
-  with ssa.Wrapper 
-  with ipa.callgraph.Wrapper {
+  with ssa.Wrapper
+  with ipa.callgraph.Wrapper
+  with Wrapper {
 
-  def printCodeLocation(n: N, bytecodeIndex: Int): String = {
-    printCodeLocation(n.getMethod(), bytecodeIndex)
-  }
+  type NOT[A] = A => Nothing
+  type INNEROR[T, U] = NOT[NOT[T] with NOT[U]]
+  type NOTNOT[A] = NOT[NOT[A]]
+  type OR[T, U] = { type LAMBDA[X] = NOTNOT[X] <:< (T INNEROR U) }
+
+  //  def printCodeLocation(n: N, bytecodeIndex: Int): String = {
+  //    printCodeLocation(n.getMethod(), bytecodeIndex)
+  //  }
 
   implicit def mWithLineNo(m: M) = new {
     def lineNoFromBytecodeIndex(bytecodeIndex: Int) = m match {
@@ -46,16 +53,6 @@ class WALAConversions extends TypeAliases
     }
     def lineNoFromIRNo(irNo: Int) = lineNoFromBytecodeIndex(m.asInstanceOf[ShrikeBTMethod].getBytecodeIndex(irNo))
   }
-
-  def printCodeLocation(m: IMethod, bytecodeIndex: Int): String = {
-    val lineNo = m.lineNoFromBytecodeIndex(bytecodeIndex)
-    val className = m.getDeclaringClass().getName().getClassName().toString()
-    "" + m.prettyPrint + "(" + className.split("\\$")(0) + ".java:" + lineNo + ")"
-  }
-
-  def inApplicationScope(n: N): Boolean = inApplicationScope(n.m)
-  def inApplicationScope(m: M): Boolean = inApplicationScope(m.getDeclaringClass)
-  def inApplicationScope(c: C): Boolean = c.getClassLoader().getReference() == ClassLoaderReference.Application
 
   //  	public static String variableName(Integer v, CGNode cgNode,
   //			int ssaInstructionNo) {
@@ -84,11 +81,6 @@ class WALAConversions extends TypeAliases
   //      }
   //    }
   //  }
-
-  implicit def statementHasN(s: Statement) = new {
-    def n = s.getNode
-  }
-
 
   val mainMethod = "main([Ljava/lang/String;)V";
 }

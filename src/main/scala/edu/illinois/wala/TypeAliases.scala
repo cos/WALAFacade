@@ -1,4 +1,4 @@
-package wala
+package edu.illinois.wala
 import com.ibm.wala.ipa.cfg.BasicBlockInContext
 import com.ibm.wala.ipa.callgraph.CGNode
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey
@@ -15,8 +15,6 @@ import com.ibm.wala.ssa.SSAArrayStoreInstruction
 import com.ibm.wala.classLoader.IField
 import com.ibm.wala.ssa.SSAInvokeInstruction
 import com.ibm.wala.ssa.SSAMonitorInstruction
-import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey
-import edu.illinois.wala.ssa.V
 import com.ibm.wala.ssa.SSAGetInstruction
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey
 
@@ -49,4 +47,6 @@ trait TypeAliases {
   type G = CallGraph
   type C = IClass
   type M = IMethod
+  
+  type ProgramCounter = com.ibm.wala.classLoader.ProgramCounter
 }

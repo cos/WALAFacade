@@ -6,6 +6,8 @@ import com.ibm.wala.classLoader.ShrikeBTMethod
 import sppa.util.debug
 import edu.illinois.wala.ssa.V
 import edu.illinois.wala.ipa.callgraph.propagation.P
+import edu.illinois.wala.classLoader.CodeLocation
+import edu.illinois.wala.ssa.IRNo
 
 object S {
   import wala.WALAConversions
@@ -25,16 +27,9 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
   def prettyPrint(): String = printCodeLocation() +
     (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
 
-  def printCodeLocation(): String = {
-    if (irNo >= 0) {
-      n.getMethod() match {
-        case m: ShrikeBTMethod => {
-          val bytecodeIndex = m.getBytecodeIndex(irNo)
-          wala.WALAConversions.printCodeLocation(m, bytecodeIndex)
-        }
-        case _ => m.toString()
-      }
-    } else {
+  def printCodeLocation(): String = irNo match {
+    case Some(irNo) => CodeLocation(m, irNo).toString
+    case _ => {
       val index = n.instructions collect { case i if i != null => i.toString } indexWhere { _ == i.toString }
       "IRNo-1 " + index + " ---- " + i
     }
@@ -44,17 +39,20 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
   lazy val sourceFilePath = m.getDeclaringClass().sourceFilePath
 
-  lazy val lineNo = m.getLineNumber(irNo)
+  lazy val lineNo = m.lineNo(irNo)
 
-  lazy val irNo = n.getIR().getInstructions().indexOf(ii => i.equals(ii))
+  lazy val irNo: Option[IRNo] = IRNo(n.getIR().getInstructions().indexOf(ii => i.equals(ii)))
 
   def valuesForVariableName(name: String): Iterable[V] = {
-    n.getIR().getSymbolTable().filter(v => {
-      val names = n.getIR().getLocalNames(irNo, v)
-      if (names != null) {
-        names.contains(name)
-      } else
-        false
+    n.getIR().getSymbolTable().filter(v => irNo match {
+      case Some(irNo) => {
+        val names = n.getIR().getLocalNames(irNo, v)
+        if (names != null) {
+          names.contains(name)
+        } else
+          false
+      }
+      case None => false
     })
   }
 
@@ -64,10 +62,12 @@ class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
     case _ => false
   }
 
-  def variableNames(v: V): Iterable[String] = {
-    if (irNo == -1) return Iterable[String]()
-    val names = n.getIR().getLocalNames(irNo, v)
-    if (names != null) names.filter(_ != null) else Iterable()
+  def variableNames(v: V): Iterable[String] = irNo match {
+    case Some(irNo) => {
+      val names = n.getIR().getLocalNames(irNo, v)
+      if (names != null) names.filter(_ != null) else Iterable()
+    }
+    case None => Iterable[String]()
   }
 
   override def toString = "S(" + n + "," + i + ")"
