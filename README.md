@@ -57,10 +57,48 @@ Alternatively, WALAFacade allows you to use a [typesafe/config](https://github.c
 4. Use the results. E.g., `pa.cg` is the call graph, `pa.heap` is the heap graph
 
 The analysis can be customized by overriding the following default methods of the `FlexibleCallGraph` class:
-```
+```scala
 def policy = { import ZeroXInstanceKeys._;  ALLOCATIONS }
 def cs = new ContextInsensitiveSelector()
 def contextInterpreter: RTAContextInterpreter
 def contextInterpreter = new DefaultSSAInterpreter(...)
 def instanceKeys = new ZeroXInstanceKeys(...)
+```
+
+### Example
+
+A basic config file - needs to be in your classpath. No other configuration necessary.
+```
+wala {
+  jre-lib-path = "/Library/Java/JavaVirtualMachines/jdk1.7.0_10.jdk/Contents/Home/jre/lib/rt.jar"
+  dependencies.binary += "myProject/bin"
+  wala.entry {
+   class = "my/test/MainClass"
+  }
+}
+```
+
+And a program that finds, in all methods matching `bar.*` and reachable from methods named `foo`, all written field pointers (i.e. `LocalPointerKey`s):
+
+```scala
+// remember that 
+// type N = CGNode // call graph nodes
+// type PutI = SSAPutInstruction
+// type LocalP = LocalPointerKey
+  
+import edu.illinois.wala.Facade._ // convenience object that activates all implicit converters
+ 
+object Example extends App {
+  implicit config = ConfigFactory.load() // loads the above config file
+  val pa = FlexibleCallGraphBuilder() // does the pointer analysis
+  
+  import pa._ // make cg, heap, etc. available in scope
+  
+  val startNodes = cg filter { _.m.name == "foo" }
+  val interestingFilter = { n: N => n.m.name matches ".*bar.*" }
+  val reachableNodes = DFS.getReachableNodes(cg, startNodes, interestingFilter)
+  val writtenPointers: Iterable[LocalP]  = reachableNodes flatMap { n =>
+    n.instructions collect { case i: PutI => P(n, i.v) }
+  }
+}
 ```
