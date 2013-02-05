@@ -20,4 +20,6 @@ Features:
 
 Design principles:
 - keep the facade API close to the original API. A fair amount of thought has been put into the WALA API so there is no point in moving away from it when the gain is not significant. 
+
 - favor usability, but think about the performance impact at each step.
+
