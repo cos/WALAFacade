@@ -1,11 +1,12 @@
-## About
+# WALAFacade
 
 **WALAFacade** is a [facade](http://en.wikipedia.org/wiki/Facade_pattern) for making [WALA](http://wala.sourceforge.net) easier to use from **Scala**.
 It is mostly syntactic sugar over the WALA API to make its use more concise. It allows bypassing boilerplate code required because of Java's less flexible type system.
 
 The implementation is working well but it is not, by far, comprehensive.
 
-Features:
+## Features
+
 - short aliases for commonly used types (e.g., `PutI` instead of `SSAPutInstruction`)
 
 -   richer API for many WALA types (e.g., get all instructions `put`ing to a `LocalP`(`LocalPointerKey`): `P(cgNode, ssaValue).puts`). Rich types implemented as [Scala value classes](http://docs.scala-lang.org/sips/pending/value-classes.html) so the performance impact should be negligible
@@ -21,5 +22,20 @@ Features:
 Design principles:
 - keep the facade API close to the original API. A fair amount of thought has been put into the WALA API so there is no point in moving away from it when the gain is not significant. 
 
-- favor usability, but think about the performance impact at each step.
+- favor usability as long as performance is not significantly hampered
 
+## Getting started
+
+Since the library is young you will likely want to get the code so you can modify it easily instead of using it as an external dependency.
+
+### Using SBT
+
+See 
+ - http://www.scala-sbt.org/release/docs/Getting-Started/Multi-Project.html
+ - http://stackoverflow.com/questions/7550376/how-can-sbt-pull-dependency-artifacts-from-git
+
+Also, for an example of how to make WALA compile with SBT, see https://github.com/cos/wala/blob/master/com.ibm.wala.core/build.sbt
+
+### Using eclipse
+
+...
