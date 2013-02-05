@@ -1,6 +1,5 @@
 package edu.illinois.wala.ipa.callgraph.propagation
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
-import sppa.util.debug
 import edu.illinois.wala.Facade._
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey
 import edu.illinois.wala.Facade._
