@@ -9,7 +9,6 @@ import com.ibm.wala.util.io.FileProvider
 import scala.collection._
 import scala.collection.JavaConverters._
 import com.ibm.wala.util.strings.Atom
-import sppa.util.debug
 import java.util.Collections
 import com.ibm.wala.classLoader.Language
 import AnalysisScope._
@@ -68,7 +67,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
       new File(path)
 
   def addBinaryDependency(directory: String, analysisScope: Atom = Application) {
-    debug("Binary: " + directory);
+//    debug("Binary: " + directory);
     val sd = getFile(directory);
     assert(sd.exists(), "dependency \""+directory+"\" not found")
     assert(sd.isDirectory(), "dependency \""+directory+"\" not a directory")
@@ -78,7 +77,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
   def getLoader() = AnalysisScope.this.getClass().getClassLoader();
 
   def addJarDirectoryDependency(path: String, scope: Scope = Extension) {
-    debug("Jar folder: " + path);
+//    debug("Jar folder: " + path);
     val dir = getFile(path);
     val delim = if (path.endsWith("/")) "" else "/"
 
@@ -97,7 +96,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
   }
 
   def addJarDependency(file: String, scope: Scope = Extension) {
-    debug("Jar: " + file);
+//    debug("Jar: " + file);
     val M = if (UNDER_ECLIPSE)
       new FileProvider().getJarFileModule(file, getLoader());
     else

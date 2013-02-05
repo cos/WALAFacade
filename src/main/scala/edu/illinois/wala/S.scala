@@ -3,7 +3,6 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext
 import edu.illinois.wala.Facade._
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock
 import com.ibm.wala.classLoader.ShrikeBTMethod
-import sppa.util.debug
 import edu.illinois.wala.ssa.V
 import edu.illinois.wala.ipa.callgraph.propagation.P
 import edu.illinois.wala.classLoader.CodeLocation
@@ -25,8 +24,8 @@ object S {
 
 class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
-  def prettyPrint(): String = printCodeLocation() +
-    (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
+  def prettyPrint(): String = printCodeLocation() 
+//    (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
 
   def printCodeLocation(): String = irNo match {
     case Some(irNo) => CodeLocation(m, irNo).toString
