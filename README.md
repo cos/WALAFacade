@@ -43,4 +43,15 @@ Simply import the project into an Eclipse workspace that also has wala.shrike, w
 You will also need to fix the names for the dependent projects. The Eclipse project is generated automatically by sbt-eclipse and currently sbt-eclipse doesn't allow periods (i.e., `.`) in project names. 
 Thus, for example, the project is dependent on the project `walaCore` instead of `com.ibm.wala.core`. You will have to adjust the project build path to use the appropriate names.
 
+## Basic usage
 
+### Initial setup
+
+This guide provides a good introduction to setting up WALA: http://wala.sourceforge.net/wiki/index.php/UserGuide:Getting_Started
+
+Alternatively, WALAFacade allows you to use a [typesafe/config](https://github.com/typesafehub/config) file instead of wala.properties. Steps:
+
+1. Create a file called `application.conf` (or [alternatives](https://github.com/typesafehub/config#standard-behavior)) and put it on the project's classpath. 
+2. Load an implicit config in your scope `Config conf = ConfigFactory.load()`
+3. `val pa = FlexibleCallGraphBuilder()` - the pointer analysis will run on instantiation
+4. Use the results. E.g., `pa.cg` is the call graph, `pa.heap` is the heap graph
