@@ -2,7 +2,6 @@ package edu.illinois.wala
 import scala.collection.JavaConversions._
 import scala.collection._
 import edu.illinois.wala._
-import edu.illinois.wala.TypeAliases
 
 class Facade extends TypeAliases
   with edu.illinois.wala.util.Wrapper
