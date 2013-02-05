@@ -55,3 +55,12 @@ Alternatively, WALAFacade allows you to use a [typesafe/config](https://github.c
 2. Load an implicit config in your scope `Config conf = ConfigFactory.load()`
 3. `val pa = FlexibleCallGraphBuilder()` - the pointer analysis will run on instantiation
 4. Use the results. E.g., `pa.cg` is the call graph, `pa.heap` is the heap graph
+
+The analysis can be customized by overriding the following default methods of the `FlexibleCallGraph` class:
+```
+def policy = { import ZeroXInstanceKeys._;  ALLOCATIONS }
+def cs = new ContextInsensitiveSelector()
+def contextInterpreter: RTAContextInterpreter
+def contextInterpreter = new DefaultSSAInterpreter(...)
+def instanceKeys = new ZeroXInstanceKeys(...)
+```
