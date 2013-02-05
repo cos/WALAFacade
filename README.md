@@ -22,7 +22,7 @@ The implementation is working well but it is not, by far, comprehensive.
 Design principles:
 - keep the facade API close to the original API. A fair amount of thought has been put into the WALA API so there is no point in moving away from it when the gain is not significant. 
 
-- favor usability as long as performance is not significantly hampered
+- favor usability, but keep performance in mind
 
 ## Getting started
 
@@ -38,4 +38,9 @@ Also, for an example of how to make WALA compile with SBT, see https://github.co
 
 ### Using eclipse
 
-...
+Simply import the project into an Eclipse workspace that also has wala.shrike, wala.core, and wala.util. 
+
+You will also need to fix the names for the dependent projects. The Eclipse project is generated automatically by sbt-eclipse and currently sbt-eclipse doesn't allow periods (i.e., `.`) in project names. 
+Thus, for example, the project is dependent on the project `walaCore` instead of `com.ibm.wala.core`. You will have to adjust the project build path to use the appropriate names.
+
+
