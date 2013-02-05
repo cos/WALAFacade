@@ -37,50 +37,11 @@ class WALAConversions extends TypeAliases
   with ipa.callgraph.Wrapper
   with Wrapper {
 
+  // Union Types - see http://www.chuusai.com/2011/06/09/scala-union-types-curry-howard/ 
   type NOT[A] = A => Nothing
   type INNEROR[T, U] = NOT[NOT[T] with NOT[U]]
   type NOTNOT[A] = NOT[NOT[A]]
   type OR[T, U] = { type LAMBDA[X] = NOTNOT[X] <:< (T INNEROR U) }
-
-  //  def printCodeLocation(n: N, bytecodeIndex: Int): String = {
-  //    printCodeLocation(n.getMethod(), bytecodeIndex)
-  //  }
-
-  implicit def mWithLineNo(m: M) = new {
-    def lineNoFromBytecodeIndex(bytecodeIndex: Int) = m match {
-      case m: ShrikeBTMethod => m.getLineNumber(bytecodeIndex)
-      case _ => -1
-    }
-    def lineNoFromIRNo(irNo: Int) = lineNoFromBytecodeIndex(m.asInstanceOf[ShrikeBTMethod].getBytecodeIndex(irNo))
-  }
-
-  //  	public static String variableName(Integer v, CGNode cgNode,
-  //			int ssaInstructionNo) {
-  //		String[] localNames;
-  //		try {
-  //			localNames = cgNode.getIR().getLocalNames(ssaInstructionNo,
-  //					v);
-  //		} catch (Exception e) {
-  //			localNames = null;
-  //		} catch (UnimplementedError e) {
-  //			localNames = null;
-  //		} 
-  //		String variableName = null;
-  //		if (localNames != null && localNames.length > 0)
-  //			variableName = localNames[0];
-  //		return variableName;
-  //	}
-
-  // access instructions of Some(object, field, is_write)
-  //  object AccessI {
-  //    def unapply(i: I):Option[(F, V)] = {
-  //      i match {
-  //        case rI: SSAGetInstruction => Some(rI.getDeclaredField(), rI.getUse(0))
-  //        case wI: SSAPutInstruction => Some(wI.getDeclaredField(), wI.getDef())
-  //        case _ => None
-  //      }
-  //    }
-  //  }
 
   val mainMethod = "main([Ljava/lang/String;)V";
 }
