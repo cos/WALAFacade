@@ -2,7 +2,7 @@
 ## About
 
 **WALAFacade** is a [facade](http://en.wikipedia.org/wiki/Facade_pattern) for making [WALA](http://wala.sourceforge.net) easier to use from **Scala**.
-It is mostly syntactic sugar over the WALA API to make its use more concise. It allows bypassing boilerplate code required by WALA because of Java's less flexible type system.
+It is mostly syntactic sugar over the WALA API to make its use more concise. It allows bypassing boilerplate code required because of Java's less flexible type system.
 
 The implementation is working well but it is not, by far, comprehensive.
 
