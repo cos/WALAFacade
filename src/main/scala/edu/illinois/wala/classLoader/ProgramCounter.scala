@@ -1,6 +1,6 @@
 package edu.illinois.wala.classLoader
 
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 
 object ProgramCounter {
   def apply(i: Int): Option[ProgramCounter] = if (i > 0)

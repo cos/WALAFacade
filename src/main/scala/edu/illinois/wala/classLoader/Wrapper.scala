@@ -1,6 +1,6 @@
 package edu.illinois.wala.classLoader
 
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 
 trait Wrapper {
   implicit def wrapC(c: C) = new RichC(c)

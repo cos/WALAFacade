@@ -1,6 +1,6 @@
 package edu.illinois.wala.classLoader
 
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 import edu.illinois.wala.Named
 import edu.illinois.wala.PrettyPrintable
 

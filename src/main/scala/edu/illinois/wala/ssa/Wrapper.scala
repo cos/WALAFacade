@@ -1,7 +1,7 @@
 package edu.illinois.wala.ssa
 
 import com.ibm.wala.ssa.SymbolTable
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 
 trait Wrapper {
   implicit def wrapSymbolTable(st: SymbolTable) = new RichSymbolTable(st)

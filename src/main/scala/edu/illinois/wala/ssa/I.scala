@@ -2,7 +2,7 @@ package edu.illinois.wala.ssa
 
 import com.ibm.wala.ipa.cha.IClassHierarchy
 import com.ibm.wala.ssa.SSAFieldAccessInstruction
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 import edu.illinois.wala.classLoader.ArrayContents
 
 class RichPutI(val i: PutI) extends AnyVal {

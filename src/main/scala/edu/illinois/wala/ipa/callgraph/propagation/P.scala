@@ -8,7 +8,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey
 import edu.illinois.wala.S
 import edu.illinois.wala.ssa.V
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 
 object P {
   def apply(n: N, v: Int) = {

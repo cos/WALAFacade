@@ -1,14 +1,14 @@
 package edu.illinois.wala.ipa.callgraph.propagation
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode
 import sppa.util.debug
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 import edu.illinois.wala.S
 import edu.illinois.wala.classLoader.ProgramCounter
 
 object O {
-  import wala.WALAConversions._
+  import edu.illinois.wala.Facade._
 
   def unapply(o: O): Option[(N, I)] = {
     o match {

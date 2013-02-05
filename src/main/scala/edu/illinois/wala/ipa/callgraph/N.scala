@@ -7,7 +7,7 @@ import com.ibm.wala.ipa.callgraph.ContextKey
 import com.ibm.wala.ipa.callgraph.CGNode
 import edu.illinois.wala.S
 import edu.illinois.wala.ssa.V
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 
 object N {
   def unapply(n: N): Option[(Context, M)] = {

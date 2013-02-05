@@ -1,6 +1,6 @@
 package edu.illinois.wala.ipa.callgraph.propagation
 
-import wala.WALAConversions._
+import edu.illinois.wala.Facade._
 import com.ibm.wala.util.collections.EmptyIterator
 
 object unknownO extends O {
