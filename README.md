@@ -107,6 +107,8 @@ object Example extends App {
 
 ## Finding your way around
 
+The code has little comments and documentation but much of it should be self-explenatory. 
+
 ### Conventions
 
 - the package structure mirrors WALA's. E.g., classes wrapping/pertaining to `com.ibm.wala.ssa` are found in `edu.illinois.wala.ssa`
