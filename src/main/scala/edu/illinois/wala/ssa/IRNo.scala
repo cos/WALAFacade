@@ -5,7 +5,7 @@ package edu.illinois.wala.ssa
  */
 
 object IRNo {
-  def apply(i: Int): Option[IRNo] = if (i > -1)
+  def apply(i: Int): Option[IRNo] = if (i >= 0)
     new Some(new IRNo(i))
   else
     None
