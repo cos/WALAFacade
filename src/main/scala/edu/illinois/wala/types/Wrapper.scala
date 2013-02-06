@@ -9,7 +9,8 @@ trait Wrapper {
 
 class RichTypeReference(val t: TypeReference) extends AnyVal with PrettyPrintable {
   def prettyPrint: String = {
-    val packageName = t.getName().getPackage().toString().replace('/', '.')
-    packageName + "." + t.getName().getClassName()
+    val packagePrefix = Option(t.getName().getPackage()) map { _.toString().replace('/', '.') } map { _ + "." } getOrElse ""
+
+    packagePrefix + t.getName().getClassName()
   }
 }
