@@ -3,7 +3,8 @@
 **WALAFacade** is a [facade](http://en.wikipedia.org/wiki/Facade_pattern) for making [WALA](http://wala.sourceforge.net) easier to use from **Scala**.
 It is mostly syntactic sugar over the WALA API to make its use more concise. It allows bypassing boilerplate code required because of Java's less flexible type system.
 
-The implementation is working well but it is not, by far, comprehensive.
+The implementation is working well but it is not, by far, comprehensive. Features have been added when needed. The discrete WALAFacade project appeared when we needed to share code between projects.
+We intent to evolve it in the same demand-driven manner from now on. If you cannot find something you need, feel free to add it, or post an feature request issue.
 
 ## Features
 
@@ -45,7 +46,7 @@ Thus, for example, the project is dependent on the project `walaCore` instead of
 
 ## Basic usage
 
-### Initial setup
+### Configuring the analysis
 
 This guide provides a good introduction to setting up WALA: http://wala.sourceforge.net/wiki/index.php/UserGuide:Getting_Started
 
@@ -102,3 +103,15 @@ object Example extends App {
   }
 }
 ```
+
+## Finding your way around
+
+### Conventions
+
+- the package structure mirrors WALA's. E.g., classes wrapping/pertaining to `com.ibm.wala.ssa` are found in `edu.illinois.wala.ssa`
+
+- many packages contain a trait called `Wrapper` which does most of the implicit magic. The `Wrapper`s are arranged in a tree structure, with each package's `Wrapper` extending all the `Wrapper`s of its subpackages.  
+
+- the wrapper for the outermost package, i.e. `edu.illinois.wala`, is actually called `Facade` and imports all other `Wrapper`s
+
+- all type aliases are in `edu.illinois.wala/TypeAliases`
