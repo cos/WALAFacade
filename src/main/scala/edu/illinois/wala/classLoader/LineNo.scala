@@ -8,4 +8,6 @@ object LineNo {
       None
 }
 
-class LineNo private (val l: Int) extends AnyVal
+class LineNo private (val l: Int) extends AnyVal {
+  override def toString = l.toString
+}

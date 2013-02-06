@@ -3,8 +3,9 @@ package edu.illinois.wala.classLoader
 import edu.illinois.wala.Facade._
 
 object ProgramCounter {
-  def apply(i: Int): Option[ProgramCounter] = if (i > 0)
+  def apply(i: Int): Option[ProgramCounter] = try {
     Some(new ProgramCounter(i))
-  else
-    None
+  } catch {
+    case e: IllegalArgumentException => None
+  }
 }

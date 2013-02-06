@@ -9,15 +9,14 @@ object CodeLocation {
     case m: ShrikeBTMethod => ProgramCounter(m.getBytecodeIndex(i)) map { new CodeLocation(m, _) }
     case _ => None
   }
-  def apply(m: M, pc: Option[ProgramCounter]): Option[CodeLocation] = pc map { new CodeLocation(m, _)}
 }
 
 case class CodeLocation(m: M, bytecodeIndex: ProgramCounter) {
-  lazy val lineNo = m.getLineNumber(bytecodeIndex)
-
+  lazy val lineNo = m.lineNo(bytecodeIndex)
+  
   override def toString = {
-    val lineNo = m.lineNo(bytecodeIndex)
     val className = m.getDeclaringClass().getName().getClassName().toString()
-    "" + m.prettyPrint + "(" + className.split("\\$")(0) + ".java:" + lineNo + ")"
+    val s = "" + m.prettyPrint + "(" + className.split("\\$")(0) + ".java:" + (lineNo getOrElse "") + ")"
+    s
   }
 }

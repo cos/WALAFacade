@@ -5,6 +5,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey
 import edu.illinois.wala.Facade._
 import edu.illinois.wala.S
 import edu.illinois.wala.classLoader.ProgramCounter
+import edu.illinois.wala.classLoader.CodeLocation
 
 object O {
   import edu.illinois.wala.Facade._
@@ -24,12 +25,13 @@ trait WrapO {
 }
 
 class RichAllocationSiteInNode(val o: AllocationSiteInNode) extends AnyVal {
-  def prettyPrint: String = o.getConcreteType().prettyPrint + ": " + lineNo
-//    (if (debug.detailContexts) " --- " + o.getNode().getContext() else "")
+  def prettyPrint: String = o.getConcreteType().prettyPrint + ": " +
+    (ProgramCounter(o.getSite().getProgramCounter()) map { CodeLocation(n.m, _) } getOrElse "")
+  //    (if (debug.detailContexts) " --- " + o.getNode().getContext() else "")
 
   def n = o.getNode
 
-  def lineNo = n.m.lineNo(ProgramCounter(o.getSite().getProgramCounter()))
+  def lineNo = n.m.lineNo(o.getSite())
 }
 
 class RichStaticClassObject(val o: StaticClassObject) extends AnyVal {

@@ -24,24 +24,19 @@ object S {
 
 class S[+J <: I](val n: N, val i: J) extends PrettyPrintable {
 
-  def prettyPrint(): String = printCodeLocation() 
-//    (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
+  def prettyPrint(): String = codeLocation map { _.toString } getOrElse "could not compute code location"
+  
+  //    (if (debug.detailContexts) " [ " + S.accessesRepo.getOrElseUpdate(this, S.accessesRepo.size) + " ] " + " --- " + n.getContext() else "")
 
-  def printCodeLocation(): String = irNo match {
-    case Some(irNo) => CodeLocation(m, irNo).toString
-    case _ => {
-      val index = n.instructions collect { case i if i != null => i.toString } indexWhere { _ == i.toString }
-      "IRNo-1 " + index + " ---- " + i
-    }
-  }
+  def codeLocation: Option[CodeLocation] = irNo flatMap { CodeLocation(m, _) }
 
   lazy val m = n.m
 
   lazy val sourceFilePath = m.getDeclaringClass().sourceFilePath
 
-  lazy val lineNo = m.lineNo(irNo)
+  lazy val lineNo = irNo flatMap { m.lineNo(_) }
 
-  lazy val irNo: Option[IRNo] = IRNo(n.getIR().getInstructions().indexOf(ii => i.equals(ii)))
+  lazy val irNo: Option[IRNo] = IRNo(n.getIR().getInstructions().indexWhere { ii => i.equals(ii) })
 
   def valuesForVariableName(name: String): Iterable[V] = {
     n.getIR().getSymbolTable().filter(v => irNo match {
