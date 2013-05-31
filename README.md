@@ -74,7 +74,7 @@ A basic config file - needs to be in your classpath. No other configuration nece
 wala {
   jre-lib-path = "/Library/Java/JavaVirtualMachines/jdk1.7.0_10.jdk/Contents/Home/jre/lib/rt.jar"
   dependencies.binary += "myProject/bin"
-  wala.entry {
+  entry {
    class = "my/test/MainClass"
   }
 }
