@@ -90,16 +90,22 @@ And a program that finds, in all methods matching `bar.*` and reachable from met
   
 import edu.illinois.wala.Facade._ // convenience object that activates all implicit converters
  
-object Example extends App {
-  implicit config = ConfigFactory.load() // loads the above config file
+import edu.illinois.wala.ipa.callgraph.FlexibleCallGraphBuilder
+import com.typesafe.config.ConfigFactory
+import com.ibm.wala.util.graph.traverse.DFS
+import scala.collection.JavaConversions._
+import edu.illinois.wala.ipa.callgraph.propagation.P
+
+object Test extends App {
+  implicit val config = ConfigFactory.load() // loads the above config file
   val pa = FlexibleCallGraphBuilder() // does the pointer analysis
-  
+
   import pa._ // make cg, heap, etc. available in scope
-  
-  val startNodes = cg filter { _.m.name == "foo" }
+
+  val startNodes = cg filter { n: N => n.m.name == "foo" }
   val interestingFilter = { n: N => n.m.name matches ".*bar.*" }
   val reachableNodes = DFS.getReachableNodes(cg, startNodes, interestingFilter)
-  val writtenPointers: Iterable[LocalP]  = reachableNodes flatMap { n =>
+  val writtenPointers: Iterable[LocalP] = reachableNodes flatMap { n =>
     n.instructions collect { case i: PutI => P(n, i.v) }
   }
 }
