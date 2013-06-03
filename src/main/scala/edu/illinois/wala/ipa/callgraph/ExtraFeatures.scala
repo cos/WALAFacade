@@ -4,10 +4,10 @@ import scala.collection._
 import edu.illinois.wala.Facade._
 import edu.illinois.wala.S
 
-trait ExtraFeatures { self: FlexibleCallGraphBuilder =>
+trait ExtraFeatures { self: AbstractCallGraphBuilder =>
 
   lazy val allStatements = {
-    callGraph.asScala filter { _.getIR() != null } map { n => n.instructions.map(i => S(n, i)) } flatten
+    cg.asScala filter { _.getIR() != null } map { n => n.instructions.map(i => S(n, i)) } flatten
   }
 
   /**
@@ -15,7 +15,7 @@ trait ExtraFeatures { self: FlexibleCallGraphBuilder =>
    */
   def findNode(pattern: String): Option[N] = {
     val p = (".*" + pattern + ".*")
-    callGraph.asScala.find(n => n.getMethod.toString().matches(p))
+    cg.asScala.find(n => n.getMethod.toString().matches(p))
   }
 
   /**
@@ -23,7 +23,7 @@ trait ExtraFeatures { self: FlexibleCallGraphBuilder =>
    */
   def findNodes(pattern: String): Iterable[N] = {
     val p = (".*" + pattern + ".*")
-    callGraph.asScala.filter(n => n.getMethod.toString().matches(p))
+    cg.asScala.filter(n => n.getMethod.toString().matches(p))
   }
 
   /**
