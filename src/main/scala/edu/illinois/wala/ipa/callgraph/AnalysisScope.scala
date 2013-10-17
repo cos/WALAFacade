@@ -14,6 +14,10 @@ import com.ibm.wala.classLoader.Language
 import AnalysisScope._
 import java.io.ByteArrayInputStream
 import scala.Array.canBuildFrom
+import com.ibm.wala.classLoader.SourceDirectoryTreeModule
+import com.ibm.wala.types.ClassLoaderReference
+import com.ibm.wala.classLoader.Module
+//import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope
 
 object AnalysisScope {
   type Scope = Atom
@@ -21,12 +25,17 @@ object AnalysisScope {
   val Extension = com.ibm.wala.ipa.callgraph.AnalysisScope.EXTENSION
   val Application = com.ibm.wala.ipa.callgraph.AnalysisScope.APPLICATION
   val Synthetic = com.ibm.wala.ipa.callgraph.AnalysisScope.SYNTHETIC
+//  val Source = JavaSourceAnalysisScope.SOURCE.getName()
   def apply(jreLibPath: String, exclusions: String) = new AnalysisScope(jreLibPath, exclusions)
+  
+  val allScopes = List(Application, 
+//      Source, 
+      Synthetic, Extension, Primordial)
 }
 
 object DependencyNature extends Enumeration {
   type DependencyNature = Value
-  val Binary, BinaryDirectory, Jar, JarDirectory = Value
+  val Binary, BinaryDirectory, Jar, JarDirectory, SourceDirectory = Value
 }
 
 object Dependency {
@@ -57,6 +66,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
       case Dependency(file, JarDirectory, scope: Scope) => addJarDirectoryDependency(file, scope)
       case Dependency(file, Jar, scope: Scope) => addJarDependency(file, scope)
       case Dependency(file, Binary, scope: Scope) => throw new Exception("Unimplemented yet")
+//      case Dependency(file, SourceDirectory, scope: Scope) => addSourceDependency(file, scope)
     }
   }
 
@@ -67,17 +77,41 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
       new File(path)
 
   def addBinaryDependency(directory: String, analysisScope: Atom = Application) {
-//    debug("Binary: " + directory);
+    //    debug("Binary: " + directory);
     val sd = getFile(directory);
-    assert(sd.exists(), "dependency \""+directory+"\" not found")
-    assert(sd.isDirectory(), "dependency \""+directory+"\" not a directory")
+    assert(sd.exists(), "dependency \"" + directory + "\" not found")
+    assert(sd.isDirectory(), "dependency \"" + directory + "\" not a directory")
     addToScope(getLoader(analysisScope), new BinaryDirectoryTreeModule(sd));
   }
+
+  // stuff for source frontend below
+
+
+//  def addSourceDependency(directory: String, analysisScope: Atom = Application) {
+//    loadersByName.put(JavaSourceAnalysisScope.SOURCE.getName(), JavaSourceAnalysisScope.SOURCE);
+//    setLoaderImpl(JavaSourceAnalysisScope.SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
+//    initSynthetic(JavaSourceAnalysisScope.SOURCE)
+//    //    debug("Binary: " + directory);
+//    val sd = getFile(directory);
+//    assert(sd.exists(), "dependency \"" + directory + "\" not found")
+//    assert(sd.isDirectory(), "dependency \"" + directory + "\" not a directory")
+//    addToScope(getLoader(analysisScope), new SourceDirectoryTreeModule(sd));
+//  }
+
+  override def addToScope(loader: ClassLoaderReference, m: Module) {
+//    if (m.isInstanceOf[SourceDirectoryTreeModule] && loader.equals(ClassLoaderReference.Application)) {
+//      super.addToScope(JavaSourceAnalysisScope.SOURCE, m);
+//    } else {
+      super.addToScope(loader, m);
+//    }
+  }
+
+  // stuff for source front end above
 
   def getLoader() = AnalysisScope.this.getClass().getClassLoader();
 
   def addJarDirectoryDependency(path: String, scope: Scope = Extension) {
-//    debug("Jar folder: " + path);
+    //    debug("Jar folder: " + path);
     val dir = getFile(path);
     val delim = if (path.endsWith("/")) "" else "/"
 
@@ -96,7 +130,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
   }
 
   def addJarDependency(file: String, scope: Scope = Extension) {
-//    debug("Jar: " + file);
+    //    debug("Jar: " + file);
     val M = if (UNDER_ECLIPSE)
       new FileProvider().getJarFileModule(file, getLoader());
     else

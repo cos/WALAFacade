@@ -17,10 +17,13 @@ import com.ibm.wala.ssa.SSAInvokeInstruction
 import com.ibm.wala.ssa.SSAMonitorInstruction
 import com.ibm.wala.ssa.SSAGetInstruction
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey
+import com.ibm.wala.ssa.ISSABasicBlock
 
 trait TypeAliases {
   type SS = BasicBlockInContext[IExplodedBasicBlock]
   type N = CGNode
+  
+  type BB = ISSABasicBlock
   
   type LocalP = LocalPointerKey
   

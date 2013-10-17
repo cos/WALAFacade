@@ -18,8 +18,8 @@ class RichInvokeI(val i: InvokeI) extends AnyVal {
 }
 
 trait IWithField extends Any {
-  def f(implicit cha:IClassHierarchy): Option[F]
-} 
+  def f(implicit cha: IClassHierarchy): Option[F]
+}
 
 class RichAccessI(val i: AccessI) extends AnyVal with IWithField {
   /**
@@ -33,7 +33,8 @@ class RichArrayReferenceI(val i: ArrayReferenceI) extends AnyVal with IWithField
 }
 
 class RichI(val i: I) extends AnyVal {
-  def uses: Stream[V] = Stream.range(0, i.getNumberOfUses()).map(index => { V(i.getUse(index)) })
+  def uses: List[V] = Range(0, i.getNumberOfUses()) map { index => V(i.getUse(index)) } toList
+  def theDef = V(i.getDef())
   def f(implicit cha: IClassHierarchy): Option[F] = i match {
     case i: AccessI => i.f
     case i: ArrayReferenceI => i.f
