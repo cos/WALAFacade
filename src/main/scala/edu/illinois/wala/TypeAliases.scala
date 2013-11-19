@@ -18,6 +18,7 @@ import com.ibm.wala.ssa.SSAMonitorInstruction
 import com.ibm.wala.ssa.SSAGetInstruction
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey
 import com.ibm.wala.ssa.ISSABasicBlock
+import com.ibm.wala.ssa.SSAPhiInstruction
 
 trait TypeAliases {
   type SS = BasicBlockInContext[IExplodedBasicBlock]
@@ -39,6 +40,7 @@ trait TypeAliases {
   type I = SSAInstruction
   type PutI = SSAPutInstruction
   type GetI = SSAGetInstruction
+  type PhiI = SSAPhiInstruction
   type AccessI = SSAFieldAccessInstruction
 
   type ArrayStoreI = SSAArrayStoreInstruction
