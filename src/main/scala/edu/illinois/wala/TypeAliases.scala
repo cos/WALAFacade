@@ -8,17 +8,10 @@ import com.ibm.wala.ipa.callgraph.CallGraph
 import com.ibm.wala.classLoader.IClass
 import com.ibm.wala.classLoader.IMethod
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock
-import com.ibm.wala.ssa.SSAPutInstruction
-import com.ibm.wala.ssa.SSAFieldAccessInstruction
-import com.ibm.wala.ssa.SSAArrayReferenceInstruction
-import com.ibm.wala.ssa.SSAArrayStoreInstruction
 import com.ibm.wala.classLoader.IField
-import com.ibm.wala.ssa.SSAInvokeInstruction
-import com.ibm.wala.ssa.SSAMonitorInstruction
-import com.ibm.wala.ssa.SSAGetInstruction
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey
-import com.ibm.wala.ssa.ISSABasicBlock
-import com.ibm.wala.ssa.SSAPhiInstruction
+
+import com.ibm.wala.ssa._
 
 trait TypeAliases {
   type SS = BasicBlockInContext[IExplodedBasicBlock]
@@ -44,6 +37,7 @@ trait TypeAliases {
   type AccessI = SSAFieldAccessInstruction
 
   type ArrayStoreI = SSAArrayStoreInstruction
+  type ArrayLoadI = SSAArrayLoadInstruction
   type ArrayReferenceI = SSAArrayReferenceInstruction
   type InvokeI = SSAInvokeInstruction
 

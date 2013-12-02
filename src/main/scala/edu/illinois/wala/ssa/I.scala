@@ -4,6 +4,11 @@ import com.ibm.wala.ipa.cha.IClassHierarchy
 import com.ibm.wala.ssa.SSAFieldAccessInstruction
 import edu.illinois.wala.Facade._
 import edu.illinois.wala.classLoader.ArrayContents
+import com.ibm.wala.ssa.SSAGetInstruction
+import com.ibm.wala.types.TypeReference
+import com.ibm.wala.ssa.SSAInvokeInstruction
+import com.ibm.wala.ssa.SSAArrayLoadInstruction
+import com.ibm.wala.ssa.SSAArrayLengthInstruction
 
 class RichPutI(val i: PutI) extends AnyVal {
   def v = V(i.getVal())
@@ -40,4 +45,12 @@ class RichI(val i: I) extends AnyVal {
     case i: ArrayReferenceI => i.f
     case _ => None
   }
+  def defedType: Option[TypeReference] = if (i.hasDef()) Some(i match {
+    case i: SSAGetInstruction => i.getDeclaredFieldType()
+    case i: SSAInvokeInstruction => i.getDeclaredResultType()
+    case i: SSAArrayLoadInstruction => i.getElementType()
+    case i: SSAArrayLengthInstruction => TypeReference.Int
+  })
+  else
+    None
 }
