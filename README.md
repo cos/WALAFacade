@@ -76,6 +76,7 @@ wala {
   dependencies.binary += "myProject/bin"
   entry {
    class = "my/test/MainClass"
+   signature-pattern = ".*methodSignaturesMatchingThisRegexWillAlsoBeEntrypoints.*"
   }
 }
 ```
