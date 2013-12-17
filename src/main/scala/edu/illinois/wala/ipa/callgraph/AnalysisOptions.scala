@@ -15,8 +15,8 @@ import com.ibm.wala.classLoader.ClassLoaderFactory
 //import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension
 import com.ibm.wala.types.ClassLoaderReference
 
-class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean) 
-  extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) { 
+class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean)
+  extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) {
 }
 
 object AnalysisOptions {
@@ -59,12 +59,17 @@ object AnalysisOptions {
 
     val dep = binDep ++ srcDep ++ jarDep ++ dependencies
 
-    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions"), dep)
+    val jreLibPath = if (config.hasPath("wala.jre-lib-path"))
+      config.getString("wala.jre-lib-path")
+    else
+      System.getenv().get("JAVA_HOME") + "/jre/lib/rt.jar"
 
-    val classLoaderImpl = 
-//      if (!srcDep.isEmpty) 
-//      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
-//    else
+    val scope = new AnalysisScope(jreLibPath, config.getString("wala.exclussions"), dep)
+
+    val classLoaderImpl =
+      //      if (!srcDep.isEmpty) 
+      //      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
+      //    else
       new ClassLoaderFactoryImpl(scope.getExclusions())
 
     apply(entrypoints, scope, classLoaderImpl, !srcDep.isEmpty)
