@@ -30,20 +30,23 @@ Design principles:
 
 Since the library is young you will likely want to get the code so you can modify it easily instead of using it as an external dependency.
 
-### Using SBT
+### Steps
 
-See 
- - http://www.scala-sbt.org/release/docs/Getting-Started/Multi-Project.html
- - http://stackoverflow.com/questions/7550376/how-can-sbt-pull-dependency-artifacts-from-git
-
-Also, for an example of how to make WALA compile with SBT, see https://github.com/cos/wala/blob/master/com.ibm.wala.core/build.sbt
+1. Clone WALA and install it to your local Maven repo
+    - `export JAVA_HOME="<java's home on your system>"` (on OS X: `/usr/libexec/java_home`) Also, you might want to add this line to your system loading profile
+    - `git clone https://github.com/wala/WALA.git` (or use my fork `https://github.com/cos/wala/tree/for-iterace` instead. It makes dispatch more precise. See the discussion about cilib results in the ISSTA paper)
+    - `cd WALA`
+    - `mvn clean install -DskipTests=true` 
+    
+2. Clone WALAFacade 
+    - `git clone https://github.com/cos/WALAFacade.git`
+    - `cd WALAFacade`
+    - `sbt publishLocal`
 
 ### Using eclipse
 
-Simply import the project into an Eclipse workspace that also has wala.shrike, wala.core, and wala.util. 
-
-You will also need to fix the names for the dependent projects. The Eclipse project is generated automatically by sbt-eclipse and currently sbt-eclipse doesn't allow periods (i.e., `.`) in project names. 
-Thus, for example, the project is dependent on the project `walaCore` instead of `com.ibm.wala.core`. You will have to adjust the project build path to use the appropriate names.
+1. Generate an Eclipse .project file by running `sbt eclipse` in the WALAFacade directory.
+2. Import the project into an Eclipse. WALA dependencies will be linked from the Ivy repository.
 
 ## Basic usage
 
