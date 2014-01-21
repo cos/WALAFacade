@@ -43,7 +43,7 @@ Since the library is young you will likely want to get the code so you can modif
     - `cd WALAFacade`
     - `sbt publishLocal`
 
-### Using eclipse
+### Generate an Eclipse project
 
 1. Generate an Eclipse .project file by running `sbt eclipse` in the WALAFacade directory.
 2. Import the project into an Eclipse. WALA dependencies will be linked from the Ivy repository.
