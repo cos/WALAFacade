@@ -49,7 +49,7 @@ object AnalysisScope {
     //      Source, 
     Synthetic, Extension, Primordial)
 
-  def apply(extraDependencies: Iterable[Dependency])(implicit config: Config) = {
+  def apply(extraDependencies: Iterable[Dependency] = Seq())(implicit config: Config) = {
     val binDep = if (config.hasPath("wala.dependencies.binary"))
       config.getList("wala.dependencies.binary") map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
     else

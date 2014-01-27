@@ -13,6 +13,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl
 import com.ibm.wala.classLoader.ClassLoaderFactory
 import com.ibm.wala.types.ClassLoaderReference
 import com.typesafe.config.ConfigList
+import com.ibm.wala.ipa.cha.IClassHierarchy
 
 class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean)
   extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) {
@@ -36,6 +37,11 @@ object AnalysisOptions {
 
     implicit val cha = ClassHierarchy.make(scope, classLoaderImpl)
 
+    new AnalysisOptions(scope, entrypoints(extraEntrypoints), cha, false) // !srcDep.isEmpty
+  }
+
+  def entrypoints(extraEntrypoints: Iterable[(String, String)] = Seq())(
+    implicit config: Config, cha: ClassHierarchy, scope: AnalysisScope) = {
     val oneEntryPoint =
       if (config.hasPath("wala.entry.class"))
         Some((config.getString("wala.entry.class"), config.getString("wala.entry.method")))
@@ -60,7 +66,7 @@ object AnalysisOptions {
     if (entrypoints.size == 0)
       System.err.println("WARNING: no entrypoints")
 
-    new AnalysisOptions(scope, entrypoints, cha, false) // !srcDep.isEmpty
+    entrypoints
   }
 
   // helper apply methods 
