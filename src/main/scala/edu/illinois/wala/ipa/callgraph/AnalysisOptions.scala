@@ -15,8 +15,8 @@ import com.ibm.wala.classLoader.ClassLoaderFactory
 //import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension
 import com.ibm.wala.types.ClassLoaderReference
 
-class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean) 
-  extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) { 
+class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean)
+  extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) {
 }
 
 object AnalysisOptions {
@@ -39,35 +39,18 @@ object AnalysisOptions {
 
   def apply(
     entrypoints: Iterable[(String, String)],
-    dependencies: Iterable[Dependency])(
+    programaticDependencies: Iterable[Dependency])(
       implicit config: Config): AnalysisOptions = {
 
-    val binDep = if (config.hasPath("wala.dependencies.binary"))
-      config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
-    else
-      List()
+    val analysisScope = AnalysisScope(programaticDependencies)
 
-    val srcDep = if (config.hasPath("wala.dependencies.source"))
-      config.getList("wala.dependencies.source").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.SourceDirectory) }
-    else
-      List()
+    val classLoaderImpl =
+      //      if (!srcDep.isEmpty) 
+      //      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
+      //    else
+      new ClassLoaderFactoryImpl(analysisScope.getExclusions())
 
-    val jarDep = if (config.hasPath("wala.dependencies.jar"))
-      config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
-    else
-      List()
-
-    val dep = binDep ++ srcDep ++ jarDep ++ dependencies
-
-    val scope = new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions"), dep)
-
-    val classLoaderImpl = 
-//      if (!srcDep.isEmpty) 
-//      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
-//    else
-      new ClassLoaderFactoryImpl(scope.getExclusions())
-
-    apply(entrypoints, scope, classLoaderImpl, !srcDep.isEmpty)
+    apply(entrypoints, analysisScope, classLoaderImpl, false) // last argument was: !srcDep.isEmpty when analyzing sources
   }
 
   def apply(klass: String, method: String)(implicit config: Config): AnalysisOptions = apply((klass, method), Seq())

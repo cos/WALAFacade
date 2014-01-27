@@ -17,6 +17,7 @@ import scala.Array.canBuildFrom
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule
 import com.ibm.wala.types.ClassLoaderReference
 import com.ibm.wala.classLoader.Module
+import com.typesafe.config.Config
 //import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope
 
 object AnalysisScope {
@@ -25,12 +26,33 @@ object AnalysisScope {
   val Extension = com.ibm.wala.ipa.callgraph.AnalysisScope.EXTENSION
   val Application = com.ibm.wala.ipa.callgraph.AnalysisScope.APPLICATION
   val Synthetic = com.ibm.wala.ipa.callgraph.AnalysisScope.SYNTHETIC
-//  val Source = JavaSourceAnalysisScope.SOURCE.getName()
+  //  val Source = JavaSourceAnalysisScope.SOURCE.getName()
   def apply(jreLibPath: String, exclusions: String) = new AnalysisScope(jreLibPath, exclusions)
-  
-  val allScopes = List(Application, 
-//      Source, 
-      Synthetic, Extension, Primordial)
+
+  val allScopes = List(Application,
+    //      Source, 
+    Synthetic, Extension, Primordial)
+
+  def apply(programaticDependencies: Iterable[Dependency])(implicit config: Config) = {
+    val binDep = if (config.hasPath("wala.dependencies.binary"))
+      config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
+    else
+      List()
+
+    val srcDep = if (config.hasPath("wala.dependencies.source"))
+      config.getList("wala.dependencies.source").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.SourceDirectory) }
+    else
+      List()
+
+    val jarDep = if (config.hasPath("wala.dependencies.jar"))
+      config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
+    else
+      List()
+
+    val dep = binDep ++ srcDep ++ jarDep ++ programaticDependencies
+
+    new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions"), dep)
+  }
 }
 
 object DependencyNature extends Enumeration {
@@ -66,7 +88,7 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
       case Dependency(file, JarDirectory, scope: Scope) => addJarDirectoryDependency(file, scope)
       case Dependency(file, Jar, scope: Scope) => addJarDependency(file, scope)
       case Dependency(file, Binary, scope: Scope) => throw new Exception("Unimplemented yet")
-//      case Dependency(file, SourceDirectory, scope: Scope) => addSourceDependency(file, scope)
+      //      case Dependency(file, SourceDirectory, scope: Scope) => addSourceDependency(file, scope)
     }
   }
 
@@ -86,24 +108,23 @@ class AnalysisScope(jreLibPath: String, exclusions: String, dependencies: Iterab
 
   // stuff for source frontend below
 
-
-//  def addSourceDependency(directory: String, analysisScope: Atom = Application) {
-//    loadersByName.put(JavaSourceAnalysisScope.SOURCE.getName(), JavaSourceAnalysisScope.SOURCE);
-//    setLoaderImpl(JavaSourceAnalysisScope.SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
-//    initSynthetic(JavaSourceAnalysisScope.SOURCE)
-//    //    debug("Binary: " + directory);
-//    val sd = getFile(directory);
-//    assert(sd.exists(), "dependency \"" + directory + "\" not found")
-//    assert(sd.isDirectory(), "dependency \"" + directory + "\" not a directory")
-//    addToScope(getLoader(analysisScope), new SourceDirectoryTreeModule(sd));
-//  }
+  //  def addSourceDependency(directory: String, analysisScope: Atom = Application) {
+  //    loadersByName.put(JavaSourceAnalysisScope.SOURCE.getName(), JavaSourceAnalysisScope.SOURCE);
+  //    setLoaderImpl(JavaSourceAnalysisScope.SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
+  //    initSynthetic(JavaSourceAnalysisScope.SOURCE)
+  //    //    debug("Binary: " + directory);
+  //    val sd = getFile(directory);
+  //    assert(sd.exists(), "dependency \"" + directory + "\" not found")
+  //    assert(sd.isDirectory(), "dependency \"" + directory + "\" not a directory")
+  //    addToScope(getLoader(analysisScope), new SourceDirectoryTreeModule(sd));
+  //  }
 
   override def addToScope(loader: ClassLoaderReference, m: Module) {
-//    if (m.isInstanceOf[SourceDirectoryTreeModule] && loader.equals(ClassLoaderReference.Application)) {
-//      super.addToScope(JavaSourceAnalysisScope.SOURCE, m);
-//    } else {
-      super.addToScope(loader, m);
-//    }
+    //    if (m.isInstanceOf[SourceDirectoryTreeModule] && loader.equals(ClassLoaderReference.Application)) {
+    //      super.addToScope(JavaSourceAnalysisScope.SOURCE, m);
+    //    } else {
+    super.addToScope(loader, m);
+    //    }
   }
 
   // stuff for source front end above
