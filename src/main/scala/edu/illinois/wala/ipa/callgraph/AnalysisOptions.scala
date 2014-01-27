@@ -20,36 +20,53 @@ class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entr
 
 object AnalysisOptions {
 
-  implicit class RichConfig(c: Config) {
-    def getListOption(path: String): Option[ConfigList] =
-      if (c.hasPath(path))
-        Some(c.getList(path))
-      else
-        None
-
-    def getStringOption(path: String): Option[String] =
-      if (c.hasPath(path))
-        Some(c.getString(path))
-      else
-        None
-  }
-
   // TODO: replace below to use the above class
 
   def apply(
-    entrypoints: Iterable[(String, String)],
-    programaticDependencies: Iterable[Dependency])(
+    extraEntrypoints: Iterable[(String, String)],
+    extraDependencies: Iterable[Dependency])(
       implicit config: Config): AnalysisOptions = {
 
-    val analysisScope = AnalysisScope(programaticDependencies)
+    implicit val scope = AnalysisScope(extraDependencies)
 
-    val classLoaderImpl = 
-//      if (!srcDep.isEmpty) 
-//      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
-//    else
-      new ClassLoaderFactoryImpl(scope.getExclusions())
+    val classLoaderImpl = new ClassLoaderFactoryImpl(scope.getExclusions())
+    //      if (!srcDep.isEmpty) 
+    //      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
+    //    else
 
-    apply(entrypoints, analysisScope, classLoaderImpl, false) // last argument was: !srcDep.isEmpty when analyzing sources
+    implicit val cha = ClassHierarchy.make(scope, classLoaderImpl)
+
+    val oneEntryPoint =
+      if (config.hasPath("wala.entry.class"))
+        Some((config.getString("wala.entry.class"), config.getString("wala.entry.method")))
+      else
+        None
+
+    val entryPointsFromPattern =
+      if (config.hasPath("wala.entry.signature-pattern")) {
+        val signaturePattern = config.getString("wala.entry.signature-pattern")
+        val matchingMethods = cha.iterator() flatMap { c =>
+          c.getAllMethods() filter { m =>
+            m.getSignature() matches signaturePattern
+          }
+        }
+        matchingMethods map { new DefaultEntrypoint(_, cha) } toSeq
+      } else
+        Seq()
+
+    val entrypoints = entryPointsFromPattern ++
+      ((extraEntrypoints ++ oneEntryPoint) map { case (klass, method) => makeEntrypoint(klass, method) })
+
+    if (entrypoints.size == 0)
+      System.err.println("WARNING: no entrypoints")
+
+    new AnalysisOptions(scope, entrypoints, cha, false) // !srcDep.isEmpty
+  }
+
+  // helper apply methods 
+
+  def apply()(implicit config: Config = ConfigFactory.load): AnalysisOptions = {
+    apply(Seq(), Seq())
   }
 
   def apply(klass: String, method: String)(implicit config: Config): AnalysisOptions = apply((klass, method), Seq())

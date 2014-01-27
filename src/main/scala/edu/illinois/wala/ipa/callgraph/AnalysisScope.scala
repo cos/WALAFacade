@@ -7,7 +7,7 @@ import com.ibm.wala.classLoader.JarFileModule
 import com.ibm.wala.util.config.FileOfClasses
 import com.ibm.wala.util.io.FileProvider
 import scala.collection._
-import scala.collection.JavaConverters._
+import scala.collection.JavaConversions._
 import com.ibm.wala.util.strings.Atom
 import java.util.Collections
 import com.ibm.wala.classLoader.Language
@@ -18,9 +18,25 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule
 import com.ibm.wala.types.ClassLoaderReference
 import com.ibm.wala.classLoader.Module
 import com.typesafe.config.Config
+import com.typesafe.config.ConfigList
 //import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope
 
 object AnalysisScope {
+
+  implicit class RichConfig(c: Config) {
+    def getListOption(path: String): Option[ConfigList] =
+      if (c.hasPath(path))
+        Some(c.getList(path))
+      else
+        None
+
+    def getStringOption(path: String): Option[String] =
+      if (c.hasPath(path))
+        Some(c.getString(path))
+      else
+        None
+  }
+
   type Scope = Atom
   val Primordial = com.ibm.wala.ipa.callgraph.AnalysisScope.PRIMORDIAL
   val Extension = com.ibm.wala.ipa.callgraph.AnalysisScope.EXTENSION
@@ -33,25 +49,27 @@ object AnalysisScope {
     //      Source, 
     Synthetic, Extension, Primordial)
 
-  def apply(programaticDependencies: Iterable[Dependency])(implicit config: Config) = {
+  def apply(extraDependencies: Iterable[Dependency])(implicit config: Config) = {
     val binDep = if (config.hasPath("wala.dependencies.binary"))
-      config.getList("wala.dependencies.binary").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
+      config.getList("wala.dependencies.binary") map { d => Dependency(d.unwrapped.asInstanceOf[String]) }
     else
       List()
 
     val srcDep = if (config.hasPath("wala.dependencies.source"))
-      config.getList("wala.dependencies.source").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.SourceDirectory) }
+      config.getList("wala.dependencies.source") map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.SourceDirectory) }
     else
       List()
 
     val jarDep = if (config.hasPath("wala.dependencies.jar"))
-      config.getList("wala.dependencies.jar").asScala map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
+      config.getList("wala.dependencies.jar") map { d => Dependency(d.unwrapped.asInstanceOf[String], DependencyNature.Jar) }
     else
       List()
 
-    val dep = binDep ++ srcDep ++ jarDep ++ programaticDependencies
+    val dependencies = binDep ++ srcDep ++ jarDep ++ extraDependencies
 
-    new AnalysisScope(config.getString("wala.jre-lib-path"), config.getString("wala.exclussions"), dep)
+    val jreLibPath = config.getStringOption("wala.jre-lib-path").getOrElse(System.getenv().get("JAVA_HOME") + "/jre/lib/rt.jar")
+
+    new AnalysisScope(jreLibPath, config.getString("wala.exclussions"), dependencies)
   }
 }
 
