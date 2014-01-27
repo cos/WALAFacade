@@ -9,6 +9,8 @@ scalaVersion := "2.10.0"
 
 resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
+EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
+
 libraryDependencies ++= Seq(
 	"junit" % "junit" % "4.+",
 	"com.typesafe" % "config" % "0.5.+",

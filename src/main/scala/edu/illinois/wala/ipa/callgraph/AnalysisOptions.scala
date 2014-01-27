@@ -7,35 +7,34 @@ import com.ibm.wala.types.MethodReference
 import com.ibm.wala.types.TypeName
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
 import com.ibm.wala.ipa.callgraph.Entrypoint
-import scala.collection.JavaConverters._
+import scala.collection.JavaConversions._
 import com.typesafe.config.Config
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl
 import com.ibm.wala.classLoader.ClassLoaderFactory
-//import com.ibm.wala.cast.java.translator.polyglot.PolyglotClassLoaderFactory
-//import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension
 import com.ibm.wala.types.ClassLoaderReference
+import com.typesafe.config.ConfigList
 
 class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean)
   extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) {
 }
 
 object AnalysisOptions {
-  def apply(entrypoints: Iterable[(String, String)], scope: AnalysisScope, classLoaderFactory: ClassLoaderFactory, isSourceAnalysis: Boolean) = {
 
-    implicit val s = scope
+  implicit class RichConfig(c: Config) {
+    def getListOption(path: String): Option[ConfigList] =
+      if (c.hasPath(path))
+        Some(c.getList(path))
+      else
+        None
 
-    implicit val cha = ClassHierarchy.make(scope, classLoaderFactory)
-
-    println(scope)
-
-    val entrypointsW = entrypoints map { case (klass, method) => makeEntrypoint(klass, method) } asJava
-
-    new AnalysisOptions(scope, entrypointsW, cha, isSourceAnalysis)
+    def getStringOption(path: String): Option[String] =
+      if (c.hasPath(path))
+        Some(c.getString(path))
+      else
+        None
   }
 
-  def apply()(implicit config: Config = ConfigFactory.load): AnalysisOptions = {
-    apply((config.getString("wala.entry.class"), config.getString("wala.entry.method")), Set())
-  }
+  // TODO: replace below to use the above class
 
   def apply(
     entrypoints: Iterable[(String, String)],
@@ -44,11 +43,11 @@ object AnalysisOptions {
 
     val analysisScope = AnalysisScope(programaticDependencies)
 
-    val classLoaderImpl =
-      //      if (!srcDep.isEmpty) 
-      //      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
-      //    else
-      new ClassLoaderFactoryImpl(analysisScope.getExclusions())
+    val classLoaderImpl = 
+//      if (!srcDep.isEmpty) 
+//      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
+//    else
+      new ClassLoaderFactoryImpl(scope.getExclusions())
 
     apply(entrypoints, analysisScope, classLoaderImpl, false) // last argument was: !srcDep.isEmpty when analyzing sources
   }
@@ -60,7 +59,7 @@ object AnalysisOptions {
 
   val mainMethod = "main([Ljava/lang/String;)V"
 
-  def makeEntrypoint(entryClass: String, entryMethod: String)(implicit scope: AnalysisScope, cha: ClassHierarchy): Entrypoint = {
+  private def makeEntrypoint(entryClass: String, entryMethod: String)(implicit scope: AnalysisScope, cha: ClassHierarchy): Entrypoint = {
     val methodReference = AnalysisScope.allScopes.toStream
       .map { scope.getLoader(_) }
       .map { TypeReference.findOrCreate(_, TypeName.string2TypeName(entryClass)) }
