@@ -5,7 +5,7 @@ version := "0.1"
 
 organization := "University of Illinois"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.11.4"
 
 resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
