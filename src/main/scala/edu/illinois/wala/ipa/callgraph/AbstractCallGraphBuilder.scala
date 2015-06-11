@@ -21,7 +21,7 @@ trait AbstractCallGraphBuilder {
 //  lazy val reflectionInterpreter = new DelegatingSSAContextInterpreter(
 //    ReflectionContextInterpreter.createReflectionContextInterpreter(_cha, _options, _cache), defaultInterpreter)
   Util.addDefaultSelectors(_options, _cha)
-  Util.addDefaultBypassLogic(_options, _options.getAnalysisScope(), classOf[Util].getClassLoader(), _cha)
+//  Util.addDefaultBypassLogic(_options, _options.getAnalysisScope(), classOf[Util].getClassLoader(), _cha)
 
   // Hooks
   def policy = { import ZeroXInstanceKeys._;  ALLOCATIONS }
