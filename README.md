@@ -135,7 +135,7 @@ object Test extends App {
     }
   }
 
-  // and a 3-liner
+  // and a 3-liner doing exactly the name thing
   DFS
     .getReachableNodes(cg, cg filter { _.m.name == "bar" })
     .flatMap { n => n.instructions collect { case i: PutI => (i.f.get, P(n, i.v).variableNames()) } }
