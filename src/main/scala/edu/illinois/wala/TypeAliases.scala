@@ -31,14 +31,16 @@ trait TypeAliases {
   type ReferenceI = I with WithReference
 
   type I = SSAInstruction
+  type AccessI = SSAFieldAccessInstruction
   type PutI = SSAPutInstruction
   type GetI = SSAGetInstruction
+
   type PhiI = SSAPhiInstruction
-  type AccessI = SSAFieldAccessInstruction
 
   type ArrayStoreI = SSAArrayStoreInstruction
   type ArrayLoadI = SSAArrayLoadInstruction
   type ArrayReferenceI = SSAArrayReferenceInstruction
+
   type InvokeI = SSAInvokeInstruction
 
   type MonitorI = SSAMonitorInstruction
