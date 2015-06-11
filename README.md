@@ -32,16 +32,19 @@ Since the library is young you will likely want to get the code so you can modif
 
 ### Steps
 
-1. Clone WALA and install it to your local Maven repo
-    - `export JAVA_HOME="<java's home on your system>"` (on OS X: `/usr/libexec/java_home`) Also, you might want to add this line to your system loading profile
-    - `git clone https://github.com/wala/WALA.git` (or use my fork `https://github.com/cos/wala/tree/for-iterace` instead. It makes dispatch more precise. See the discussion about cilib results in the ISSTA paper)
-    - `cd WALA`
-    - `mvn clean install -DskipTests=true` 
+##### Clone WALA (optional)
+
+This step is not required anymore as WALA is available from Maven Central now. Still, if you would like to also hack on the WALA source code, clone WALA and install it to your local Maven repo:
+
+ - `export JAVA_HOME="<java's home on your system>"` (on OS X: `/usr/libexec/java_home`) Also, you might want to add this line to your system loading profile
+ - `git clone https://github.com/wala/WALA.git` (or use my fork `https://github.com/cos/wala/tree/for-iterace` instead. It makes dispatch more precise. See the discussion about cilib results in the ISSTA paper)
+ - `cd WALA`
+ - `mvn clean install -DskipTests=true` 
     
-2. Clone WALAFacade 
-    - `git clone https://github.com/cos/WALAFacade.git`
-    - `cd WALAFacade`
-    - `sbt publishLocal`
+##### Clone WALAFacade 
+ - `git clone https://github.com/cos/WALAFacade.git`
+ - `cd WALAFacade`
+ - `sbt publishLocal`
 
 ### Generate an Eclipse project
 
