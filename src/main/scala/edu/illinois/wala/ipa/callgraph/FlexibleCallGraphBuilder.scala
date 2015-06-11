@@ -19,11 +19,11 @@ object FlexibleCallGraphBuilder {
 
   def apply(entrypoint: (String, String), dependency: String)(implicit config: Config = ConfigFactory.load): AbstractCallGraphBuilder =
     apply(entrypoint, Seq(Dependency(dependency)))
-    
-  def apply()(implicit config: Config): AbstractCallGraphBuilder = 
+
+  def apply()(implicit config: Config): AbstractCallGraphBuilder =
     apply(AnalysisOptions())
 
-  def apply(options: AnalysisOptions): AbstractCallGraphBuilder = 
+  def apply(options: AnalysisOptions): AbstractCallGraphBuilder =
 //    if(options.isSourceAnalysis)
 //      new AstFlexibleCallGraphBuilder(options)
 //    else
@@ -44,6 +44,8 @@ class FlexibleCallGraphBuilder(
 //      AstIRFactory.makeDefaultFactory()
 //    else
       new DefaultIRFactory())
+
+  def this()(implicit config: Config) = this(AnalysisOptions())
 
   final lazy val heap = getPointerAnalysis().getHeapGraph()
 
