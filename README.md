@@ -129,8 +129,8 @@ object Test extends App {
     n.instructions collect {
       case i: PutI =>
         val p: LocalP = P(n, i.v)
-        val variableNames = p.variableNames()
-        val fieldName = i.f.get
+        val variableNames: Iterable[String] = p.variableNames()
+        val fieldName: F = i.f.get
         (fieldName, variableNames)
     }
   }
