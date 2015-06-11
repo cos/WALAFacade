@@ -4,17 +4,11 @@ import com.ibm.wala.util.Predicate
 import com.ibm.wala.util.intset.IntSetAction
 import com.ibm.wala.util.intset.IntSet
 import com.ibm.wala.util.intset.SparseIntSet
-import com.ibm.wala.util.collections.Filter
 import collection.JavaConverters._
 
 trait Wrapper {
   implicit def makePredicateFromFunction[T](f: Function1[T, Boolean]) = new Predicate[T] {
     def test(t: T) = f(t)
-  }
-
-  // is actually deprecated
-  implicit def makeFilterFromFunction[T](f: Function1[T, Boolean]) = new Filter[T] {
-    def accepts(t: T) = f(t)
   }
 
   implicit def makeIntSetActionFromFunction(f: Function1[Int, Unit]) = new IntSetAction {
