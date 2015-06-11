@@ -78,43 +78,67 @@ def instanceKeys = new ZeroXInstanceKeys(...)
 A basic config file - needs to be in your classpath. No other configuration necessary.
 ```
 wala {
-  jre-lib-path = "/Library/Java/JavaVirtualMachines/jdk1.7.0_10.jdk/Contents/Home/jre/lib/rt.jar"
-  dependencies.binary += "myProject/bin"
+  jre-lib-path = "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/rt.jar"
+  dependencies.binary += "target/scala-2.11/classes"
+  exclussions = ""
   entry {
-   class = "my/test/MainClass"
-   signature-pattern = ".*methodSignaturesMatchingThisRegexWillAlsoBeEntrypoints.*"
+    signature-pattern = ".*Foo.*main.*"
   }
 }
 ```
 
-And a program that finds, in all methods matching `bar.*` and reachable from methods named `foo`, all written field pointers (i.e. `LocalPointerKey`s):
+And a program that finds in all the code reachable from methods named `bar` all written fields and the names of the variables written to each.
 
 ```scala
 // remember that 
 // type N = CGNode // call graph nodes
 // type PutI = SSAPutInstruction
 // type LocalP = LocalPointerKey
-  
-import edu.illinois.wala.Facade._ // convenience object that activates all implicit converters
- 
-import edu.illinois.wala.ipa.callgraph.FlexibleCallGraphBuilder
-import com.typesafe.config.ConfigFactory
+
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector
 import com.ibm.wala.util.graph.traverse.DFS
-import scala.collection.JavaConversions._
+
+import edu.illinois.wala.ipa.callgraph.FlexibleCallGraphBuilder
 import edu.illinois.wala.ipa.callgraph.propagation.P
 
+import com.typesafe.config.ConfigFactory
+
+// convenience object that activates all implicit converters
+import edu.illinois.wala.Facade._
+
+import scala.collection.JavaConversions._
+
 object Test extends App {
-  implicit val config = ConfigFactory.load() // loads the above config file
-  val pa = FlexibleCallGraphBuilder() // does the pointer analysis
+  implicit val config = ConfigFactory.load()
 
-  import pa._ // make cg, heap, etc. available in scope
-
-  val startNodes = cg filter { n: N => n.m.name == "foo" }
-  val interestingFilter = { n: N => n.m.name matches ".*bar.*" }
-  val reachableNodes = DFS.getReachableNodes(cg, startNodes, interestingFilter)
-  val writtenPointers: Iterable[LocalP] = reachableNodes flatMap { n =>
-    n.instructions collect { case i: PutI => P(n, i.v) }
+  // creates a new pointer analysis with a special context selector
+  // implicitly uses the above config file
+  val pa = new FlexibleCallGraphBuilder() {
+    override def cs = new nCFAContextSelector(2, new ContextInsensitiveSelector());
   }
+
+  // make cg, heap, etc. available in scope
+
+  import pa._
+
+  // more verbose to each understanding
+  val startNodes = cg filter { n: N => n.m.name == "bar" }
+  val reachableNodes = DFS.getReachableNodes(cg, startNodes)
+  val foo = reachableNodes flatMap { n =>
+    n.instructions collect {
+      case i: PutI =>
+        val p: LocalP = P(n, i.v)
+        val variableNames = p.variableNames()
+        val fieldName = i.f.get
+        (fieldName, variableNames)
+    }
+  }
+
+  // and a 3-liner
+  DFS
+    .getReachableNodes(cg, cg filter { _.m.name == "bar" })
+    .flatMap { n => n.instructions collect { case i: PutI => (i.f.get, P(n, i.v).variableNames()) } }
 }
 ```
 
