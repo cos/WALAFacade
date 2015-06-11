@@ -4,7 +4,7 @@ import com.ibm.wala.analysis.pointers.HeapGraph
 import com.ibm.wala.ipa.callgraph.{AnalysisCache, CallGraph, ContextSelector}
 import com.ibm.wala.ipa.callgraph.impl.{ContextInsensitiveSelector, Util}
 import com.ibm.wala.ipa.callgraph.propagation.cfa.{DefaultSSAInterpreter, ZeroXInstanceKeys}
-import com.ibm.wala.ipa.cha.ClassHierarchy
+import com.ibm.wala.ipa.cha.{IClassHierarchy, ClassHierarchy}
 
 trait AbstractCallGraphBuilder {
   def _options: AnalysisOptions
@@ -14,7 +14,7 @@ trait AbstractCallGraphBuilder {
   // public
   def heap: HeapGraph[_]
   def cg: CallGraph
-  
+  implicit val implicitCha: IClassHierarchy
   
   // just helpers
   lazy val defaultInterpreter = new DefaultSSAInterpreter(_options, _cache)
