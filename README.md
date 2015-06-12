@@ -10,7 +10,7 @@ We intent to evolve it in the same demand-driven manner from now on. If you cann
 
 - short aliases for commonly used types (e.g., `PutI` instead of `SSAPutInstruction`)
 
--   richer API for many WALA types (e.g., get all instructions `put`ing to a `LocalP`(`LocalPointerKey`): `P(cgNode, ssaValue).puts`). 
+- richer API for many WALA types (e.g., get all instructions `put`ing to a `LocalP`(`LocalPointerKey`): `P(cgNode, ssaValue).puts`). 
     Rich types are implemented as [Scala value classes](http://docs.scala-lang.org/sips/pending/value-classes.html) so the performance impact should be negligible
 
 - alternative `CallGraphBuilder` and related classes for fast bootstrapping (integrated with [typesafe/config](https://github.com/typesafehub/config))
@@ -28,7 +28,12 @@ Design principles:
 
 ## Getting started
 
-Since the library is young you will likely want to get the code so you can modify it easily instead of using it as an external dependency.
+If you use sbt, the easiest way to get the library is from maven central:
+```
+libraryDependencies += "edu.illinois.wala" %% "walafacade" % "0.1.1"
+```
+
+Still, since the library is young you will likely want to get the code so you can modify it easily instead of using it as an external dependency.
 
 ### Steps
 
@@ -46,10 +51,14 @@ This step is not required anymore as WALA is available from Maven Central now. S
  - `cd WALAFacade`
  - `sbt publishLocal`
 
-### Generate an Eclipse project
+### Generate an Eclipse project or import into IntelliJ
 
-1. Generate an Eclipse .project file by running `sbt eclipse` in the WALAFacade directory.
+To generate an Eclipse project:
+
+1. Generate an .project file by running `sbt eclipse` in the WALAFacade directory.
 2. Import the project into an Eclipse. WALA dependencies will be linked from the Ivy repository.
+
+Alternatively, import into IntelliJ as an sbt project.
 
 ## Basic usage
 
@@ -80,7 +89,8 @@ A basic config file - needs to be in your classpath. No other configuration nece
 wala {
   jre-lib-path = "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/rt.jar"
   dependencies.binary += "target/scala-2.11/classes"
-  exclussions = ""
+  dependencies.jar += "andthis.jar"
+  exclussions += ".*BesidesDefaultsIgnoreAlsoThisPattern.*"
   entry {
     signature-pattern = ".*Foo.*main.*"
   }
