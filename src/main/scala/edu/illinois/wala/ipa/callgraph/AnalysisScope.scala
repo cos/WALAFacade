@@ -69,7 +69,7 @@ object AnalysisScope {
 
     val jreLibPath = config.getStringOption("wala.jre-lib-path").getOrElse(System.getenv().get("JAVA_HOME") + "/jre/lib/rt.jar")
 
-    new AnalysisScope(jreLibPath, config.getString("wala.exclussions"), dependencies)
+    new AnalysisScope(jreLibPath, config.getString("wala.exclusions"), dependencies)
   }
 }
 

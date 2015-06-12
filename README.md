@@ -90,7 +90,7 @@ wala {
   jre-lib-path = "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/rt.jar"
   dependencies.binary += "target/scala-2.11/classes"
   dependencies.jar += "andthis.jar"
-  exclussions += ".*BesidesDefaultsIgnoreAlsoThisPattern.*"
+  exclusions += ".*BesidesDefaultsIgnoreAlsoThisPattern.*"
   entry {
     signature-pattern = ".*Foo.*main.*"
   }
