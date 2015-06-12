@@ -1,7 +1,7 @@
 // set the name of the project
 name := "WALAFacade"
 
-version := "0.1.1"
+version := "0.1.2"
 
 organization := "edu.illinois.wala"
 
