@@ -14,23 +14,22 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey
 import com.ibm.wala.ssa._
 
 trait TypeAliases {
-  type SS = BasicBlockInContext[IExplodedBasicBlock]
   type N = CGNode
-  
+
   type BB = ISSABasicBlock
-  
-  type LocalP = LocalPointerKey
-  
+  type SS = BasicBlockInContext[IExplodedBasicBlock]
+
   type P = PointerKey
+  type LocalP = LocalPointerKey
 
   type O = InstanceKey
 
   type F = IField
 
   type WithReference = { def ref: Int }
-  type ReferenceI = I with WithReference
 
   type I = SSAInstruction
+  type ReferenceI = I with WithReference
   type AccessI = SSAFieldAccessInstruction
   type PutI = SSAPutInstruction
   type GetI = SSAGetInstruction
