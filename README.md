@@ -30,7 +30,7 @@ Design principles:
 
 If you use sbt, the easiest way to get the library is from maven central:
 ```
-libraryDependencies += "edu.illinois.wala" %% "walafacade" % "0.1.1"
+libraryDependencies += "edu.illinois.wala" %% "walafacade" % "0.1.2"
 ```
 
 Still, since the library is young you will likely want to get the code so you can modify it easily instead of using it as an external dependency.
