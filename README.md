@@ -51,7 +51,7 @@ This step is not required anymore as WALA is available from Maven Central now. S
  - `cd WALAFacade`
  - `sbt publishLocal`
 
-### Generate an Eclipse project or import into IntelliJ
+##### Generate an Eclipse project or import into IntelliJ
 
 To generate an Eclipse project:
 
