@@ -165,3 +165,7 @@ The code has little comments and documentation but much of it should be self-exp
 - the wrapper for the outermost package, i.e. `edu.illinois.wala`, is actually called `Facade` and imports all other `Wrapper`s
 
 - all type aliases are in `edu.illinois.wala/TypeAliases`
+
+## Related projects
+
+[cuplv/walautil](https://github.com/cuplv/walautil) is a collection of WALA utility functions for Scala projects you may want to check out.
