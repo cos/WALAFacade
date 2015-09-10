@@ -35,6 +35,10 @@ libraryDependencies += "edu.illinois.wala" %% "walafacade" % "0.1.2"
 
 Still, since the library is young you will likely want to get the code so you can modify it easily instead of using it as an external dependency.
 
+There are also ready-made example projects you can simply clone:
+ - for using WALAFacade from Java: https://github.com/cos/WALAFacade-java-start
+ - for using WALAFacade from Scala: (soon)
+
 ### Steps
 
 ##### Clone WALA (optional)
