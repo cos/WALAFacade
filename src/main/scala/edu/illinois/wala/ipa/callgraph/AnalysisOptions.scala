@@ -1,19 +1,15 @@
 package edu.illinois.wala.ipa.callgraph
 
-import com.typesafe.config.ConfigFactory
-import com.ibm.wala.ipa.cha.ClassHierarchy
-import com.ibm.wala.types.TypeReference
-import com.ibm.wala.types.MethodReference
-import com.ibm.wala.types.TypeName
-import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
+import com.ibm.wala.cast.java.translator.jdt.JDTClassLoaderFactory
+import com.ibm.wala.cast.java.translator.jdt.ejc.EJCClassLoaderFactory
+import com.ibm.wala.classLoader.{JavaLanguage, Language}
 import com.ibm.wala.ipa.callgraph.Entrypoint
+import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
+import com.ibm.wala.ipa.cha.ClassHierarchy
+import com.ibm.wala.types.{MethodReference, TypeName, TypeReference}
+import com.typesafe.config.{Config, ConfigFactory}
+
 import scala.collection.JavaConversions._
-import com.typesafe.config.Config
-import com.ibm.wala.classLoader.ClassLoaderFactoryImpl
-import com.ibm.wala.classLoader.ClassLoaderFactory
-import com.ibm.wala.types.ClassLoaderReference
-import com.typesafe.config.ConfigList
-import com.ibm.wala.ipa.cha.IClassHierarchy
 
 class AnalysisOptions(scope: AnalysisScope, entrypoints: java.lang.Iterable[Entrypoint], val cha: ClassHierarchy, val isSourceAnalysis: Boolean)
   extends com.ibm.wala.ipa.callgraph.AnalysisOptions(scope, entrypoints) {
@@ -30,14 +26,11 @@ object AnalysisOptions {
 
     implicit val scope = AnalysisScope(extraDependencies)
 
-    val classLoaderImpl = new ClassLoaderFactoryImpl(scope.getExclusions())
-    //      if (!srcDep.isEmpty) 
-    //      new PolyglotClassLoaderFactory(scope.getExclusions(), new JavaIRTranslatorExtension())
-    //    else
+    val classLoaderFactory = new EJCClassLoaderFactory(scope.getExclusions())
 
-    implicit val cha = ClassHierarchy.make(scope, classLoaderImpl)
+    implicit val cha = ClassHierarchy.make(scope, classLoaderFactory, Language.JAVA)
 
-    new AnalysisOptions(scope, entrypoints(extraEntrypoints), cha, false) // !srcDep.isEmpty
+    new AnalysisOptions(scope, entrypoints(extraEntrypoints), cha, true) // !srcDep.isEmpty
   }
 
   def entrypoints(extraEntrypoints: Iterable[(String, String)] = Seq())(
@@ -69,7 +62,7 @@ object AnalysisOptions {
     entrypoints
   }
 
-  // helper apply methods 
+  // helper apply methods
 
   def apply()(implicit config: Config = ConfigFactory.load): AnalysisOptions = {
     apply(Seq(), Seq())
