@@ -16,7 +16,10 @@ class RichM(val m: M) extends AnyVal {
   def name = m.getSelector().getName().toString()
 
   def prettyPrint: String = {
-    val packageName = m.getDeclaringClass().getName().getPackage().toString().replace('/', '.')
+    val packageName = m.getDeclaringClass().getName().getPackage() match {
+      case p: AnyRef => p.toString().replace('/', '.')
+      case null => ""
+    }
     packageName + "." + m.getDeclaringClass().name + "." + m.name
   }
 
