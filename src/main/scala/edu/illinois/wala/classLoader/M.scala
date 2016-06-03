@@ -1,5 +1,6 @@
 package edu.illinois.wala.classLoader
 
+import com.ibm.wala.cast.loader.AstMethod
 import edu.illinois.wala.Facade._
 import com.ibm.wala.classLoader.ShrikeBTMethod
 import edu.illinois.wala.ssa.IRNo
@@ -33,6 +34,7 @@ class RichM(val m: M) extends AnyVal {
 
   def lineNo(i: IRNo): Option[LineNo] = m match {
     case m: ShrikeBTMethod => ProgramCounter(m.getBytecodeIndex(i)) flatMap { lineNo(_) }
+    case m: AstMethod => ProgramCounter(m.getLineNumber(i)) flatMap { lineNo(_) }
     case _ => None
   }
   
