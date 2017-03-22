@@ -7,7 +7,7 @@ organization := "edu.illinois.wala"
 
 scalaVersion := "2.11.6"
 
-crossScalaVersions := Seq("2.10.5", "2.11.6")
+crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
 
 resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
