@@ -1,7 +1,7 @@
 // set the name of the project
 name := "WALAFacade"
 
-version := "0.1.2"
+version := "0.1.3-SNAPSHOT"
 
 organization := "edu.illinois.wala"
 
@@ -18,13 +18,13 @@ EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 libraryDependencies ++= Seq(
 	"junit" % "junit" % "4.+" % "test",
 	"com.typesafe" % "config" % "0.5.+",
-	"com.ibm.wala" % "com.ibm.wala.shrike" % "1.3.9",
-	"com.ibm.wala" % "com.ibm.wala.util" % "1.3.9",
-	"com.ibm.wala" % "com.ibm.wala.core" % "1.3.9",
-	"com.ibm.wala" % "com.ibm.wala.cast" % "1.3.9",
-	"com.ibm.wala" % "com.ibm.wala.cast.java" % "1.3.9",
-	"com.ibm.wala" % "com.ibm.wala.ide" % "1.3.9",
-	"com.ibm.wala" % "com.ibm.wala.ide.jdt" % "1.3.9"
+	"com.ibm.wala" % "com.ibm.wala.shrike" % "1.4.0",
+	"com.ibm.wala" % "com.ibm.wala.util" % "1.4.0",
+	"com.ibm.wala" % "com.ibm.wala.core" % "1.4.0",
+	"com.ibm.wala" % "com.ibm.wala.cast" % "1.4.0",
+	"com.ibm.wala" % "com.ibm.wala.cast.java" % "1.4.0"//,
+	//"com.ibm.wala" % "com.ibm.wala.ide" % "1.4.0",
+	//"com.ibm.wala" % "com.ibm.wala.ide.jdt" % "1.4.0"
 )
 
 EclipseKeys.withSource := true

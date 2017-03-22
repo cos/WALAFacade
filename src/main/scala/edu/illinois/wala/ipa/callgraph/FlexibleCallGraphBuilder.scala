@@ -35,7 +35,7 @@ class FlexibleCallGraphBuilder(
   with AbstractCallGraphBuilder with ExtraFeatures {
 
   // Constructors
-  def this(cha: ClassHierarchy, options: AnalysisOptions, irFactory: IRFactory[IMethod]) = this(cha, options, new AnalysisCache(irFactory), new DefaultPointerKeyFactory())
+  def this(cha: ClassHierarchy, options: AnalysisOptions, irFactory: IRFactory[IMethod]) = this(cha, options, new AnalysisCacheImpl(irFactory), new DefaultPointerKeyFactory())
   def this(options: AnalysisOptions) = this(options.cha, options,
     if (options.isSourceAnalysis)
       AstIRFactory.makeDefaultFactory()
