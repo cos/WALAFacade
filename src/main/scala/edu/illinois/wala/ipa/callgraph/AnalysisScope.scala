@@ -24,7 +24,6 @@ import com.ibm.wala.classLoader.Module
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigList
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope
-import com.ibm.wala.ide.classloader.EclipseSourceDirectoryTreeModule
 
 object AnalysisScope {
 

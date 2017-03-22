@@ -1,11 +1,10 @@
 package edu.illinois.wala.ipa.callgraph
 
-import com.ibm.wala.cast.java.translator.jdt.JDTClassLoaderFactory
-import com.ibm.wala.cast.java.translator.jdt.ejc.EJCClassLoaderFactory
-import com.ibm.wala.classLoader.{JavaLanguage, Language}
+import com.ibm.wala.classLoader.{ClassLoaderFactoryImpl, JavaLanguage, Language}
 import com.ibm.wala.ipa.callgraph.Entrypoint
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint
 import com.ibm.wala.ipa.cha.ClassHierarchy
+import com.ibm.wala.ipa.cha.ClassHierarchyFactory
 import com.ibm.wala.types.{MethodReference, TypeName, TypeReference}
 import com.typesafe.config.{Config, ConfigFactory}
 
@@ -26,9 +25,9 @@ object AnalysisOptions {
 
     implicit val scope = AnalysisScope(extraDependencies)
 
-    val classLoaderFactory = new EJCClassLoaderFactory(scope.getExclusions())
+    val classLoaderFactory = new ClassLoaderFactoryImpl(scope.getExclusions())
 
-    implicit val cha = ClassHierarchy.make(scope, classLoaderFactory, Language.JAVA)
+    implicit val cha = ClassHierarchyFactory.make(scope, classLoaderFactory, Language.JAVA)
 
     new AnalysisOptions(scope, entrypoints(extraEntrypoints), cha, true) // !srcDep.isEmpty
   }
