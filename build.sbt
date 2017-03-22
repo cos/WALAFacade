@@ -1,11 +1,11 @@
 // set the name of the project
 name := "WALAFacade"
 
-version := "0.1.3-SNAPSHOT"
+version := "0.2"
 
 organization := "edu.illinois.wala"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.12.1"
 
 crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
 
