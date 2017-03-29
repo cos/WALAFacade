@@ -11,20 +11,16 @@ crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
 
 resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
-resolvers += "Caius" at "http://releases.ivy.brindescu.com" // for com.ibm.wala.cast.java
-
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
 libraryDependencies ++= Seq(
 	"junit" % "junit" % "4.+" % "test",
 	"com.typesafe" % "config" % "0.5.+",
-	"com.ibm.wala" % "com.ibm.wala.shrike" % "1.4.0",
-	"com.ibm.wala" % "com.ibm.wala.util" % "1.4.0",
-	"com.ibm.wala" % "com.ibm.wala.core" % "1.4.0",
-	"com.ibm.wala" % "com.ibm.wala.cast" % "1.4.0",
-	"com.ibm.wala" % "com.ibm.wala.cast.java" % "1.4.0"//,
-	//"com.ibm.wala" % "com.ibm.wala.ide" % "1.4.0",
-	//"com.ibm.wala" % "com.ibm.wala.ide.jdt" % "1.4.0"
+	"com.ibm.wala" % "com.ibm.wala.shrike" % "1.4.1",
+	"com.ibm.wala" % "com.ibm.wala.util" % "1.4.1",
+	"com.ibm.wala" % "com.ibm.wala.core" % "1.4.1",
+	"com.ibm.wala" % "com.ibm.wala.cast" % "1.4.1",
+	"com.ibm.wala" % "com.ibm.wala.cast.java" % "1.4.1"
 )
 
 EclipseKeys.withSource := true
